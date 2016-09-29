@@ -1,0 +1,32 @@
++++++++++++++++++
+<?php
+/**
+ * Created by PhpStorm.
+ * User: bernard
+ * Date: 28/09/2016
+ * Time: 13:07
+ */
+function ffff($aaaa,$bbbb)
+{
+    $a[]=$b;
+    // Nouveau texte substitue bbbb
+    // Nouveau texte substitue cccc
+    // Nouveau texte substitue dddd
+    // Nouveau texte substitue eeee
+    }
+}
+function gggg($aaaa,$bbbb)
+{
+    // Nouveau texte substitue xxxx
+    // Nouveau texte substitue xxxx
+    // Nouveau texte substitue xxxx
+    // Nouveau texte substitue xxxx
+    // Nouveau texte substitue xxxx
+}
+<a>lien avant</a>
+<a>lien avant 2</a>
+//<a>lien</a>
+<a>lien apres</a>
+<a>lien apres 2</a>
+?>
+-----------------
