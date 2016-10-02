@@ -11,11 +11,15 @@ class Has_many
     var $explications;
     var $module_detail;
 
-    function __construct($explications, Module $module_detail)
+    function __construct(Module $module, $explications, Module $module_detail)
     {
         echo "Crée Has_many $explications <br>";
 
         $this->$explications = $explications;
         $this->module_detail = $module_detail;
+
+        echo "Crée $module_detail->nom belongs to $module->nom ($explications) <br>";
+
+        $module_detail->belongs_to[] = $module;
     }
 }

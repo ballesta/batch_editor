@@ -9,13 +9,17 @@
 class Module
 {
     var $nom;
+    var $id_key;
     var $explications;
-    var $relations_one_to_many=[];
 
-    function __construct($nom, $explications)
+    var $relations_one_to_many=[];
+    var $belongs_to=[];
+
+    function __construct($nom, $id_key, $explications)
     {
         echo "Crée Module $nom ($explications)<br>";
         $this->nom          = $nom;
+        $this->id_key       = $id_key;
         $this->explications = $explications;
     }
 }

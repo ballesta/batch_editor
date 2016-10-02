@@ -1,30 +1,33 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: bernard
- * Date: 29/09/2016
- * Time: 13:21
- */
+    /**
+     * Created by PhpStorm.
+     * User: bernard
+     * Date: 29/09/2016
+     * Time: 13:21
+     */
 
-include 'Modele.php';
-include 'Module.php';
-include 'Has_many.php';
+    include 'Modele.php';
+    include 'Module.php';
+    include 'Has_many.php';
 
-include '../Generators/Sximo_code_generator.php';
-echo '<h1>Test modèles</h1>';
+    include '../Generators/Sximo_code_generator.php';
+    echo '<h1>Test modèles</h1>';
 
-$m = new Modele('football','COmplexes sportifs de Football en salle');
+    $m = new Modele('football', 'Complexes sportifs de Football en salle');
 
-// Modules
-$rs = new Module('reseauxsalles','Réseaux de complexes sportifs');
-$cs = new Module('complexesportif','Locations de terrains de football indoors');
-$m->modules[]=$rs;
-$m->modules[]=$cs;
+    // Modules
+    $rs = new Module('reseauxsalles', 'club_id', 'Réseaux de complexes sportifs');
+    $cs = new Module('complexesportif', 'complexe_salle_id', 'Locations de terrains de football indoors');
 
-// Relation has many
-$rs_hm_cs = new Has_many('Complexes sportifs gérés par ce réseau', $cs);
-$rs->relations_one_to_many[] = $rs_hm_cs;
+    // Relation has many
+    $rs_hm_cs = new Has_many($rs, 'Complexes sportifs gérés par ce réseau', $cs);
+    $rs->relations_one_to_many[] = $rs_hm_cs;
 
-$m->affiche();
-$g = new Sixmo_code_generator();
-$m->generate_code($g);
+    // Ajoute modules au modèle
+    $m->modules[] = $rs;
+    $m->modules[] = $cs;
+
+    //$m->affiche();
+    $g = new Sixmo_code_generator('H:\wamp-3-32\www\ms_football_salles\2-site');
+    $m->generate_code($g);
+?>
