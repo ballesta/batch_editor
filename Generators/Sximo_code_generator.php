@@ -23,11 +23,44 @@
         function module_begin(Modele $modele, Module $module)
         {
             echo '--Module begin ', $module->nom, '<br>';
+
         }
 
         function has_many_begin(Modele $modele, Module $module, Has_many $has_many)
         {
             echo '----has_many_begin ', $module->nom, '<br>';
+            $this->insert_link_to_detail_grid($modele, $module, $has_many);
+        }
+
+        // Insert button in list to drill down to detailed list
+        function insert_link_to_detail_grid(Modele $modele, Module $module, Has_many $has_many)
+        {
+
+            $module_name = $has_many->module_detail->nom;
+            $link_to_detail =
+            [   '{{!!',
+                '\Navigation::link_to_detail(  '                    ,
+                '$text      = ' . "'$module_name',"                 ,
+                '$help      = ' . "'$has_many->explications',"      ,
+                '$url       = ' . "'$module_name" . '/show/' ."',"  ,
+                '$parent_key= ' . "'$module->id_key',"              ,
+                '$parent_id = ' . '$row->' . $module->id_key .")"   ,
+            '!!}}'
+            ];
+            //$link_to_detail = ['----------------------'];
+            $file_path = 'resources\\views' . '\\' . $module->nom . '\\index.blade.php';
+            $full_file_path = $this->laravel_project_path . '\\' . $file_path;
+            echo "<h1>$full_file_path</h1>";
+            // Save path to wite generated file
+            $this->full_file_path = $full_file_path;
+            // Read view source code for injection of generated code
+            $editor = new Batch_script_editor($full_file_path);
+            $editor->find('@foreach ($tableGrid as $field)');
+            $editor->find('@endforeach');
+            $editor->find('<td>');
+            // Insert link to detail view of current line
+            $editor->insert($link_to_detail);
+            $editor->save();
         }
 
         function has_many_end(Modele $modele, Module $module, Has_many $has_many)

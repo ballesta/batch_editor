@@ -80,14 +80,20 @@ class Batch_script_editor
                       $text);
         $this->current_pointer += count($text);
     }
-	function insert_after($text)
-	{
+    function insert_after($text)
+    {
+        // Splice = 'épisure' in french
         array_splice ($this->lines,
             $this->current_pointer+1,
             0,
             $text);
         $this->current_pointer += count($text);
-	}
+    }
+
+    function insert($text)
+    {
+        $this->insert_after($text);
+    }
 
 	function replace($from, $to, $replacement_text)
 	{
