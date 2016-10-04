@@ -28,6 +28,8 @@
     $m->modules[] = $cs;
 
     //$m->affiche();
-    $g = new Sixmo_code_generator('H:\wamp-3-32\www\ms_football_salles\2-site');
+    // Location of source code to enhance.
+    $local_laravel_site = 'H:\wamp-3-32\www\ms_football_salles\2-site';
+    $g = new Sixmo_code_generator($local_laravel_site);
     $m->generate_code($g);
 ?>

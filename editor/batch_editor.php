@@ -18,7 +18,6 @@ class Batch_script_editor
 
 		// Init search pointer to beginning of file
         $this->current_pointer = 0;
-
 	}
 
     function move_to_begining()
@@ -133,14 +132,22 @@ class Batch_script_editor
 
             if (strpos($line, '{') !== FALSE)
             {
-                //echo '{{{{{{{{{{{ ',$line, '<br>';
                 $level++;
             }
         }
-        file_put_contents('code_genere.php', $this->lines);
-        //$r = new Reformat('code_genere.php');
+        $this->backup_file();
+        file_put_contents($this->file_to_edit, $this->lines);
     }
 
+    // Copy file to backup
+    function backup_file()
+    {
+        $file_name_without_suffix = substr($this->file_to_edit, 0, -4);
+        $suffix = substr($this->file_to_edit, -4);
+        // Concatenate time in seconds to original file name
+        $backup_file_name = $file_name_without_suffix . '_' . time() . $suffix;
+        copy($this->file_to_edit, $backup_file_name);
+    }
 
     function identation($level)
     {

@@ -12,6 +12,7 @@
 
     class Sixmo_code_generator extends Code_generator
     {
+
         // Begin, end function called for each entity of model.
 
         function modele_begin(Modele $modele)
@@ -58,7 +59,7 @@
             $parent_id_key = $parent->id_key;
             $filter =
             [
-                '$parent_id_key = ' . $parent_id_key . ';',
+                '$parent_id_key = ' . "'$parent_id_key';",
                 '// Table',
                 '$table = with(new static)->table;',
                 '// clef primaire de la table',
@@ -81,6 +82,7 @@
             $file_path = 'app\\Models' . '\\' . $module->nom . '.php';
             $full_file_path = $this->laravel_project_path . '\\' . $file_path;
             echo "<h1>$full_file_path</h1>";
+            $this->full_file_path = $full_file_path;
             $editor = new Batch_script_editor($full_file_path);
             //$function_body  = $editor->replace_words(
             //                         [ 'parent_id_key' => $parent_id_key]

@@ -19,6 +19,9 @@
         var $file_path;
         // Content (source code) being generated
         var $content;
+        // Path of file being generated
+        var $full_file_path;
+
 
         function __construct($laravel_project_path)
         {
