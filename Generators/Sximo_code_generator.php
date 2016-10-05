@@ -28,38 +28,50 @@
 
         function has_many_begin(Modele $modele, Module $module, Has_many $has_many)
         {
-            echo '----has_many_begin ', $module->nom, '<br>';
+            echo '----has_many_begin ---- ', $module->nom, '<br>';
             $this->insert_link_to_detail_grid($modele, $module, $has_many);
         }
 
         // Insert button in list to drill down to detailed list
         function insert_link_to_detail_grid(Modele $modele, Module $module, Has_many $has_many)
         {
-
-            $module_name = $has_many->module_detail->nom;
-            $link_to_detail =
-            [   '{{!!',
-                '\Navigation::link_to_detail(  '                    ,
-                '$text      = ' . "'$module_name',"                 ,
-                '$help      = ' . "'$has_many->explications',"      ,
-                '$url       = ' . "'$module_name" . '/show/' ."',"  ,
-                '$parent_key= ' . "'$module->id_key',"              ,
-                '$parent_id = ' . '$row->' . $module->id_key .")"   ,
-            '!!}}'
-            ];
-            //$link_to_detail = ['----------------------'];
+            // Get file to update
             $file_path = 'resources\\views' . '\\' . $module->nom . '\\index.blade.php';
             $full_file_path = $this->laravel_project_path . '\\' . $file_path;
-            echo "<h1>$full_file_path</h1>";
             // Save path to wite generated file
             $this->full_file_path = $full_file_path;
-            // Read view source code for injection of generated code
             $editor = new Batch_script_editor($full_file_path);
+
+            // Do the changes
+
+            // 1. Enlarge action column to cope with added buttons
+            //    ------------------------------------------------
+            $editor->find("{{ Lang::get('core.btn_action') }}");
+            $action_column_width = $editor->find_regex('/width="([0-9]+)"/');
+            $enlarged_column_width = $action_column_width[1] + 130;
+            $editor->replace_regexp('/width="([0-9]+)"/','width="' . $enlarged_column_width .'"');
+
+            // 2. Insert link to detail view of current line
+            //    ------------------------------------------
+            $module_name = $has_many->module_detail->nom;
+            $module_title = $has_many->module_detail->title;
+            // Prepare button link to details
+            $link_to_detail =
+            ['{!!',
+                '\Navigation::link_to_detail(  '                   ,
+                '$text      = ' . "'$module_title',"               ,
+                '$help      = ' . "'$has_many->explications',"     ,
+                '$url       = ' . "URL::to('$module_name/show/')," ,
+                '$parent_key= ' . "'$module->id_key',"             ,
+                '$parent_id = ' . '$row->' . $module->id_key .")"  ,
+             '!!}'
+            ];
+
             $editor->find('@foreach ($tableGrid as $field)');
             $editor->find('@endforeach');
             $editor->find('<td>');
-            // Insert link to detail view of current line
             $editor->insert($link_to_detail);
+
             $editor->save();
         }
 

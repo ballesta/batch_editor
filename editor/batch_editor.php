@@ -1,178 +1,210 @@
 <?php
-//include 'Reformat.php';
 
-// Batch edit a PHP script or any text file
-class Batch_script_editor
-{
-    var $file_to_edit;
-    var $lines;
-    var $current_pointer;
-
-	function __construct($file_to_edit )
-	{
-        // Remember file name
-        $this->file_to_edit = $file_to_edit;
-		// Read file to edit in array
-        $this->lines = file($file_to_edit ,
-                            FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-
-		// Init search pointer to beginning of file
-        $this->current_pointer = 0;
-	}
-
-    function move_to_begining()
+    /**
+     * Batch edit a PHP script or any text file
+     *
+     * Links: http://php.net/manual/fr/function.preg-match.php
+     *
+     * Class Batch_script_editor
+     */
+    class Batch_script_editor
     {
-        $this->current_pointer = 0;
-    }
+        var $file_to_edit;
+        var $lines;
+        var $current_pointer;
+        var $block_begin = '//-- Code generated Begin';
+        var $block_end = '//-- Code generated End';
 
-    function move_to_end()
-    {
-        $this->current_pointer = count($this->lines);
-    }
-
-    var $block_begin = '';
-    var $block_end = '';
-
-    function remove_generated_code_blocks()
-    {
-
-    }
-
-	function search($pattern)
-	{
-		// Loop from current line pointer to search given pattern
-        //echo '<hr>';
-        $max_pointer = count($this->lines);
-        for($i = $this->current_pointer ; $i < $max_pointer ; $i++)
+        function __construct($file_to_edit)
         {
-            //echo $i,' : ', htmlentities($this->lines[$i]),'<br>';
-            $line = $this->lines[$i];
-            if (($p = strpos($line, $pattern)) !== FALSE)
-            {
-                $this->current_pointer = $i;
-                // Return line pointer
-                return $i;
+            // Remember file name
+            $this->file_to_edit = $file_to_edit;
+            // Read file to edit in array
+            $this->lines = file($file_to_edit, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+            // Init search pointer to beginning of file
+            $this->current_pointer = 0;
+        }
+
+        function move_to_begining()
+        {
+            $this->current_pointer = 0;
+        }
+
+        function move_to_end()
+        {
+            $this->current_pointer = count($this->lines);
+        }
+
+        function remove_generated_code_blocks()
+        {
+
+        }
+
+        function find($pattern)
+        {
+            if (($p = $this->search($pattern)) == FALSE) {
+                // Fails if not found pattern
+                die("*** Not found: find($pattern) ***");
+            } else {
+                return $p;
             }
         }
-        // Fails if not found pattern
-        return false;
-	}
 
-	// Search that must find
-    function find($pattern)
-    {
-        if (($p = $this->search($pattern)) == FALSE)
+        // Search that must find
+
+        function search($pattern)
         {
+            // Loop from current line pointer to search given pattern
+            //echo '<hr>';
+            $max_pointer = count($this->lines);
+            for ($i = $this->current_pointer; $i < $max_pointer; $i++) {
+                echo $i,' : ', htmlentities($this->lines[$i]),'<br>';
+                $line = $this->lines[$i];
+                if (strpos($line, $pattern) === FALSE) {
+                    // Not found, continue
+                }
+                else
+                {
+                    // Found
+                    $this->current_pointer = $i;
+                    //echo $i,' : ', htmlentities($line),'<br>';
+                    // Return line pointer
+                    //die('fin');
+                    return $i;
+                }
+            }
+
             // Fails if not found pattern
-            die("*** Not found: $pattern ***");
+            return FALSE;
         }
-        else
+
+        /**
+         * Search and find a regular expression in current line
+         *
+         * @param $regexp_pattern
+         *
+         * @return mixed
+         */
+        function find_regex($regexp_pattern)
         {
-            return $p;
-        }
-    }
-
-    function insert_before($text)
-    {
-        array_splice ($this->lines,
-                      $this->current_pointer,
-                      0,
-                      $text);
-        $this->current_pointer += count($text);
-    }
-    function insert_after($text)
-    {
-        // Splice = 'épisure' in french
-        array_splice ($this->lines,
-            $this->current_pointer+1,
-            0,
-            $text);
-        $this->current_pointer += count($text);
-    }
-
-    function insert($text)
-    {
-        $this->insert_after($text);
-    }
-
-	function replace($from, $to, $replacement_text)
-	{
-		// Delete lines inside $from ... $to
-		// Then replace with new text
-        $nbr_of_lines_to_remove = $to-$from -1;
-        //echo "--------->nbr_of_lines_to_remove:$nbr_of_lines_to_remove<br>";
-        //echo "--------->replacement_text:$replacement_text[0]<br>";
-
-        array_splice ($this->lines,
-                             $from+1,
-                             $nbr_of_lines_to_remove,
-                             $replacement_text);
-	}
-
-    function  replace_words($dictionnaire, $texte)
-    {
-        foreach ($dictionnaire as $mot => $remplacer)
-        {
-            $texte = str_replace('(----'. $mot . '----)',
-                $remplacer,
-                $texte);
-        }
-        return    "    //(( Generated by LaraSpeed\n"
-        .      $texte
-        . "    //)) End ";
-    }
-
-    // Saves edited file
-    function save()
-    {
-        $l=1;
-        $level = 0;
-        foreach($this->lines as &$line)
-        {
-            if ((strpos($line, '}')) !== FALSE)
-            {
-                $level--;
-            }
-
-            $line = $this->identation($level) . trim($line) . "\n";
-
-            if (strpos($line, '{') !== FALSE)
-            {
-                $level++;
+            $subject = $this->lines[$this->current_pointer];;
+            $result = preg_match($regexp_pattern, $subject, $matches);
+            if ($result === 1) {
+                // Found pattern
+                return $matches;
+            } else {
+                echo $subject, '<br>';
+                die("*** Not found regexp: find_regex($regexp_pattern) ***");
             }
         }
-        $this->backup_file();
-        file_put_contents($this->file_to_edit, $this->lines);
-    }
 
-    // Copy file to backup
-    function backup_file()
-    {
-        $file_name_without_suffix = substr($this->file_to_edit, 0, -4);
-        $suffix = substr($this->file_to_edit, -4);
-        // Concatenate time in seconds to original file name
-        $backup_file_name = $file_name_without_suffix . '_' . time() . $suffix;
-        copy($this->file_to_edit, $backup_file_name);
-    }
-
-    function identation($level)
-    {
-        $identation = '';
-        for ($i=1; $i <= $level; $i++)
-            $identation .= '    ';
-        return $identation;
-    }
-
-    function display($title)
-    {
-        echo "<hr><h1>$title</h1>";
-        echo "Curseur:$this->current_pointer<br>";
-        echo "<pre>";
-        foreach($this->lines as $line)
+        function insert_before($text)
         {
-            echo htmlentities($line),'<br>';
+            array_splice($this->lines, $this->current_pointer, 0, $text);
+            $this->current_pointer += count($text);
         }
-        echo "</pre>";
-        echo "*** fin ***";
+
+        function insert($text)
+        {
+            $this->insert_after($text);
+        }
+
+        function insert_after($text)
+        {
+            // Splice = 'épisure' in french
+            array_splice($this->lines, $this->current_pointer + 1, 0, $text);
+            $this->current_pointer += count($text);
+        }
+
+        function replace($from, $to, $replacement_text)
+        {
+            // Delete lines inside $from ... $to
+            // Then replace with new text
+            $nbr_of_lines_to_remove = $to - $from - 1;
+            //echo "--------->nbr_of_lines_to_remove:$nbr_of_lines_to_remove<br>";
+            //echo "--------->replacement_text:$replacement_text[0]<br>";
+
+            array_splice($this->lines, $from + 1, $nbr_of_lines_to_remove, $replacement_text);
+        }
+
+        public function replace_regexp($from_regexp_pattern, $to_string)
+        {
+            $subject = $this->lines[$this->current_pointer];
+            $matches = 0;
+            $result = preg_replace ($from_regexp_pattern,
+                                 $to_string,
+                                 $subject,
+                                 1,
+                                 $matches);
+            $this->lines[$this->current_pointer] = $result;
+            if ($matches == 1) {
+                // Found and replaced pattern
+                return TRUE;
+            } else {
+                die("*** Not found regexp to replace: $from_regexp_pattern ***");
+            }
+        }
+
+        function replace_words($dictionnaire, $texte)
+        {
+            foreach ($dictionnaire as $mot => $remplacer) {
+                $texte = str_replace('(----' . $mot . '----)', $remplacer, $texte);
+            }
+
+            return "    //(( Generated by LaraSpeed\n" . $texte . "    //)) End ";
+        }
+
+        // Saves edited file
+        function save()
+        {
+            // $l = 1;
+            $level = 0;
+            foreach ($this->lines as &$line) {
+                if ((strpos($line, '}')) !== FALSE) {
+                    $level--;
+                }
+
+                $line = $this->identation($level) . trim($line) . "\n";
+
+                if (strpos($line, '{') !== FALSE) {
+                    $level++;
+                }
+            }
+            $this->backup_file();
+            file_put_contents($this->file_to_edit, $this->lines);
+        }
+
+        // Copy file to backup
+
+        function identation($level)
+        {
+            $identation = '';
+            for ($i = 1; $i <= $level; $i++)
+                $identation .= '    ';
+
+            return $identation;
+        }
+
+        function backup_file()
+        {
+            $file_name_without_suffix = substr($this->file_to_edit, 0, -4);
+            $suffix = substr($this->file_to_edit, -4);
+            // Concatenate time in seconds to original file name
+            $backup_file_name = $file_name_without_suffix . '_' . time() . $suffix;
+            copy($this->file_to_edit, $backup_file_name);
+        }
+
+        function display($title)
+        {
+            echo "<hr><h1>$title</h1>";
+            echo "Curseur:$this->current_pointer<br>";
+            echo "<pre>";
+            foreach ($this->lines as $line) {
+                echo htmlentities($line), '<br>';
+            }
+            echo "</pre>";
+            echo "*** fin ***";
+        }
+
     }
-}

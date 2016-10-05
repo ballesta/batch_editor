@@ -16,8 +16,8 @@
     $m = new Modele('football', 'Complexes sportifs de Football en salle');
 
     // Modules
-    $rs = new Module('reseauxsalles', 'club_id', 'Réseaux de complexes sportifs');
-    $cs = new Module('complexesportif', 'complexe_salle_id', 'Locations de terrains de football indoors');
+    $rs = new Module('reseauxsalles', 'Réseaux de salles', 'club_id', 'Réseaux de complexes sportifs');
+    $cs = new Module('complexesportif','Complexes sportifs', 'complexe_salle_id', 'Locations de terrains de football indoors');
 
     // Relation has many
     $rs_hm_cs = new Has_many($rs, 'Complexes sportifs gérés par ce réseau', $cs);

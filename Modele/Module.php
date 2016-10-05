@@ -9,16 +9,18 @@
 class Module
 {
     var $nom;
+    var $title;
     var $id_key;
     var $explications;
 
     var $relations_one_to_many=[];
     var $belongs_to=[];
 
-    function __construct($nom, $id_key, $explications)
+    function __construct($nom, $title, $id_key, $explications)
     {
         echo "Crée Module $nom ($explications)<br>";
         $this->nom          = $nom;
+        $this->title          = $title;
         $this->id_key       = $id_key;
         $this->explications = $explications;
     }
