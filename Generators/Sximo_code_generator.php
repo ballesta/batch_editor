@@ -98,8 +98,6 @@
          */
         function insert_parent_filter_in_controller(Module $module, Module $parent)
         {
-            //echo $this->file_path;
-            //$this->inject_source_code_begin($this->file_path);
             // Replace SQL where clause in controller
             $parent_id_key = $parent->id_key;
             $filter =
