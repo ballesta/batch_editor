@@ -172,6 +172,7 @@
                 }
             }
             $this->backup_file();
+            echo "file_put_contents($this->file_to_edit)<br>";
             file_put_contents($this->file_to_edit, $this->lines);
         }
 
@@ -192,6 +193,7 @@
             $suffix = substr($this->file_to_edit, -4);
             // Concatenate time in seconds to original file name
             $backup_file_name = $file_name_without_suffix . '_' . time() . $suffix;
+            echo "********* $backup_file_name ************<br>";
             copy($this->file_to_edit, $backup_file_name);
         }
 

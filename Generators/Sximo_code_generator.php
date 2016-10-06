@@ -30,6 +30,8 @@
         {
             echo '----has_many_begin ---- ', $module->nom, '<br>';
             $this->insert_link_to_detail_grid($modele, $module, $has_many);
+            $this->insert_remember_filter_key_into_controller($modele, $module, $has_many);
+            $this->insert_init_parent_key_into_controller($modele, $module, $has_many);
         }
 
         // Insert button in list to drill down to detailed list
@@ -61,7 +63,7 @@
                 '\Navigation::link_to_detail(  '                   ,
                 '$text      = ' . "'$module_title',"               ,
                 '$help      = ' . "'$has_many->explications',"     ,
-                '$url       = ' . "URL::to('$module_name/show/')," ,
+                '$url       = ' . "URL::to('$module_name')," ,
                 '$parent_key= ' . "'$module->id_key',"             ,
                 '$parent_id = ' . '$row->' . $module->id_key .")"  ,
              '!!}'
@@ -71,9 +73,71 @@
             $editor->find('@endforeach');
             $editor->find('<td>');
             $editor->insert($link_to_detail);
-
             $editor->save();
         }
+
+        function insert_remember_filter_key_into_controller($modele, $module, Has_many $has_many)
+        {
+            // Get file to update
+            $detail_module_name = $has_many->module_detail->nom;
+            $file_path = 'app\\Http\\Controllers' . '\\' . $detail_module_name . 'Controller.php';
+            $full_file_path = $this->laravel_project_path . '\\' . $file_path;
+            // Save path to wite generated file
+            $this->full_file_path = $full_file_path;
+            $editor = new Batch_script_editor($full_file_path);
+
+            // Do the changes
+
+            // 1. Get Key from URL then add it to Session
+            //        $club_id = $request->query("club_id"); // =>1
+            //        \Session::put("club_id", $club_id);
+            $save_key =
+            [
+                '$id'. ' = ' . '$request->query("' . $module->id_key . '");',
+                '\Session::put("' . $module->id_key .'", $id);'
+            ];
+            print_r($save_key); echo '<hr>';
+            $editor->find('function getIndex( Request $request )');
+            $editor->find('{');
+            $editor->insert($save_key);
+            $editor->save();
+        }
+
+        function insert_init_parent_key_into_controller($modele, $module, $has_many)
+        {
+            // Get file to update
+            $detail_module_name = $has_many->module_detail->nom;
+            $file_path = 'app\\Http\\Controllers' . '\\' . $detail_module_name . 'Controller.php';
+            $full_file_path = $this->laravel_project_path . '\\' . $file_path;
+            // Save path to wite generated file
+            //$this->full_file_path = $full_file_path;
+            $editor = new Batch_script_editor($full_file_path);
+
+            // Do the changes
+
+            // teste :// Add club_id
+            // teste :
+            // teste :$club_id = \Session::get('club_id', null);
+            // teste :$columns['club_id'] = $club_id;
+            // teste :$this->data['row'] = $columns;
+
+            $init_key =
+                [
+                    '$columns = $this->data[\'row\'];',
+                    '$id' . ' = \Session::get(\'' . $module->id_key . '\', null);',
+                    '$columns[\''. $module->id_key . '\']' . ' = '  . '$id;' ,
+                    '$this->data[\'row\'] = $columns;'
+                ];
+            //print_r($init_key); echo '<hr>';
+            $editor->find('function getUpdate(Request $request, $id = null)');
+            $editor->find('$this->data[\'row\'] = $this->model->getColumnTable');
+            $editor->insert($init_key);
+            $editor->save();
+
+
+        }
+
+
 
         function has_many_end(Modele $modele, Module $module, Has_many $has_many)
         {
@@ -127,19 +191,12 @@
             echo "<h1>$full_file_path</h1>";
             $this->full_file_path = $full_file_path;
             $editor = new Batch_script_editor($full_file_path);
-            //$function_body  = $editor->replace_words(
-            //                         [ 'parent_id_key' => $parent_id_key]
-            //                         , $filter);
-            //file_put_contents('gggg.php', $function_body);
 
             // Read controller source code for injection of generated code
-
-            // search '	public static function queryWhere(  ){' ... '}'
             $begin = $editor->find('public static function queryWhere(  ){');
             $end = $editor->find('}');
             // Replace function body by generated code
             $editor->replace($begin, $end, $filter);
-            //$editor->replace($begin,$end,['aaaaaaa']);
             $editor->save();
         }
 
