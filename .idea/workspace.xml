@@ -5,9 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b2430f47-717e-461a-bbcc-c0171144bd7c" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Generators/Sximo_code_generator.php" afterPath="$PROJECT_DIR$/Generators/Sximo_code_generator.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/editor/batch_editor.php" afterPath="$PROJECT_DIR$/editor/batch_editor.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Modele/test.php" afterPath="$PROJECT_DIR$/Modele/test.php" />
     </list>
     <ignored path="batch_editor.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -38,11 +37,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test.php" pinned="true" current-in-tab="false">
+      <file leaf-file-name="test.php" pinned="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Modele/test.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="385">
-              <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+            <state relative-caret-position="455">
+              <caret line="46" column="23" selection-start-line="46" selection-start-column="23" selection-end-line="46" selection-end-column="23" />
               <folding>
                 <element signature="e#10#113#0#PHP" expanded="true" />
               </folding>
@@ -82,11 +81,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Sximo_code_generator.php" pinned="true" current-in-tab="true">
+      <file leaf-file-name="Sximo_code_generator.php" pinned="true" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Generators/Sximo_code_generator.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="535">
-              <caret line="137" column="9" selection-start-line="137" selection-start-column="9" selection-end-line="137" selection-end-column="9" />
+            <state relative-caret-position="205">
+              <caret line="123" column="0" selection-start-line="123" selection-start-column="0" selection-end-line="123" selection-end-column="0" />
               <folding>
                 <element signature="e#11#114#0#PHP" expanded="true" />
               </folding>
@@ -121,11 +120,11 @@
         <option value="$PROJECT_DIR$/Modele/gggg.php" />
         <option value="$PROJECT_DIR$/Modele/code_genere.php" />
         <option value="$PROJECT_DIR$/Generators/Code_generator.php" />
-        <option value="$PROJECT_DIR$/Modele/test.php" />
         <option value="$PROJECT_DIR$/Modele/Module.php" />
         <option value="$PROJECT_DIR$/Modele/Modele.php" />
         <option value="$PROJECT_DIR$/editor/batch_editor.php" />
         <option value="$PROJECT_DIR$/Generators/Sximo_code_generator.php" />
+        <option value="$PROJECT_DIR$/Modele/test.php" />
       </list>
     </option>
   </component>
@@ -329,12 +328,12 @@
       <workItem from="1475689429511" duration="487000" />
       <workItem from="1475692238888" duration="1801000" />
       <workItem from="1475741037432" duration="622000" />
-      <workItem from="1475757242539" duration="6117000" />
+      <workItem from="1475757242539" duration="11576000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="84857000" />
+    <option name="totallyTimeSpent" value="90316000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
@@ -738,16 +737,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Modele/test.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="385">
-          <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-          <folding>
-            <element signature="e#10#113#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Modele/Module.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="385">
@@ -784,10 +773,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Generators/Sximo_code_generator.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="535">
-          <caret line="137" column="9" selection-start-line="137" selection-start-column="9" selection-end-line="137" selection-end-column="9" />
+        <state relative-caret-position="205">
+          <caret line="123" column="0" selection-start-line="123" selection-start-column="0" selection-end-line="123" selection-end-column="0" />
           <folding>
             <element signature="e#11#114#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modele/test.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="455">
+          <caret line="46" column="23" selection-start-line="46" selection-start-column="23" selection-end-line="46" selection-end-column="23" />
+          <folding>
+            <element signature="e#10#113#0#PHP" expanded="true" />
           </folding>
         </state>
       </provider>

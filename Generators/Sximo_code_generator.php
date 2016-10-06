@@ -94,7 +94,8 @@
             $save_key =
             [
                 '$id'. ' = ' . '$request->query("' . $module->id_key . '");',
-                '\Session::put("' . $module->id_key .'", $id);'
+                'if (!is_null($id))',
+                '    \Session::put("' . $module->id_key .'", $id);'
             ];
             print_r($save_key); echo '<hr>';
             $editor->find('function getIndex( Request $request )');
