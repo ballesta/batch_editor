@@ -12,8 +12,8 @@
         var $file_to_edit;
         var $lines;
         var $current_pointer;
-        var $block_begin = '//-- Code generated Begin';
-        var $block_end = '//-- Code generated End';
+        var $generated_block_begin = '//(( Code generated begin';
+        var $generated_block_end   = '//)) Code generated end';
 
         function __construct($file_to_edit)
         {
@@ -21,37 +21,45 @@
             $this->file_to_edit = $file_to_edit;
             // Read file to edit in array
             $this->lines = file($file_to_edit, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-
             // Init search pointer to beginning of file
             $this->current_pointer = 0;
-        }
-
-        function move_to_begining()
-        {
+            $this->remove_generated_code_blocks();
             $this->current_pointer = 0;
         }
 
-        function move_to_end()
-        {
-            $this->current_pointer = count($this->lines);
-        }
-
+        /**
+         * Remove generated code
+         * Used before to regenerate.
+         *
+         */
         function remove_generated_code_blocks()
         {
-
+            do {
+                $block_deleted = false;
+                $this->move_to_beginning();
+                $begin = $this->search($this->generated_block_begin);
+                if (!($begin === FALSE)) {
+                    // Found beginning of generated code
+                    $end = $this->search($this->generated_block_end);
+                    if (!($end === FALSE))
+                    {
+                        // Found corresponding end of generated code
+                        // Delete block including open dans close markers
+                        $this->delete($begin - 1, $end + 1);
+                        $block_deleted = true;
+                    }
+                    else {
+                        echo "No end of generated code, line : $begin";
+                        die();
+                    }
+                }
+            } while ($block_deleted);
         }
 
-        function find($pattern)
+        function move_to_beginning()
         {
-            if (($p = $this->search($pattern)) == FALSE) {
-                // Fails if not found pattern
-                die("*** Not found: find($pattern) ***");
-            } else {
-                return $p;
-            }
+            $this->current_pointer = 0;
         }
-
-        // Search that must find
 
         function search($pattern)
         {
@@ -59,24 +67,46 @@
             //echo '<hr>';
             $max_pointer = count($this->lines);
             for ($i = $this->current_pointer; $i < $max_pointer; $i++) {
-                echo $i,' : ', htmlentities($this->lines[$i]),'<br>';
+                // echo $i,' : ', htmlentities($this->lines[$i]),'<br>';
                 $line = $this->lines[$i];
                 if (strpos($line, $pattern) === FALSE) {
                     // Not found, continue
-                }
-                else
-                {
+                } else {
                     // Found
                     $this->current_pointer = $i;
-                    //echo $i,' : ', htmlentities($line),'<br>';
+
                     // Return line pointer
-                    //die('fin');
                     return $i;
                 }
             }
 
             // Fails if not found pattern
             return FALSE;
+        }
+
+        function delete($from, $to)
+        {
+            // Delete lines inside $from ... $to
+            $nbr_of_lines_to_remove = $to - $from - 1;
+            array_splice($this->lines, $from + 1, $nbr_of_lines_to_remove);
+        }
+
+        function move_to_end()
+        {
+            $this->current_pointer = count($this->lines);
+        }
+
+        // Search that must find
+
+        function find($pattern)
+        {
+            if (($p = $this->search($pattern)) == FALSE) {
+                // Fails if not found pattern
+                echo "File: $this->file_to_edit<br>";
+                die("*** Not found: find($pattern) ***");
+            } else {
+                return $p;
+            }
         }
 
         /**
@@ -101,8 +131,24 @@
 
         function insert_before($text)
         {
-            array_splice($this->lines, $this->current_pointer, 0, $text);
+            $text_identified = $this->identifies_generated_block($text);
+            array_splice($this->lines, $this->current_pointer, 0, $text_identified);
             $this->current_pointer += count($text);
+        }
+
+        function identifies_generated_block($text)
+        {
+            // Check if blade (html) file
+            if (strpos($this->file_to_edit, '.blade') === FALSE) {
+                // Not found: php source code, use php comments
+                $begin = '//' . $this->generated_block_begin;
+                $end   = '//' . $this->generated_block_end;
+            } else {
+                // Found: Blade, comments must be XML otherwise they are displayed
+                $begin = '<!--' . $this->generated_block_begin . '-->';
+                $end   = '<!--' . $this->generated_block_end   . '-->';
+            }
+            return array_merge([$begin], $text, [$end]);
         }
 
         function insert($text)
@@ -113,7 +159,8 @@
         function insert_after($text)
         {
             // Splice = 'épisure' in french
-            array_splice($this->lines, $this->current_pointer + 1, 0, $text);
+            $text_identified = $this->identifies_generated_block($text);
+            array_splice($this->lines, $this->current_pointer + 1, 0, $text_identified);
             $this->current_pointer += count($text);
         }
 
@@ -121,22 +168,19 @@
         {
             // Delete lines inside $from ... $to
             // Then replace with new text
+            $replacement_text_identified = $this->identifies_generated_block($replacement_text);
+            //print_r($replacement_text_identified); die();
             $nbr_of_lines_to_remove = $to - $from - 1;
-            //echo "--------->nbr_of_lines_to_remove:$nbr_of_lines_to_remove<br>";
-            //echo "--------->replacement_text:$replacement_text[0]<br>";
-
-            array_splice($this->lines, $from + 1, $nbr_of_lines_to_remove, $replacement_text);
+            $suppressed_lines = array_splice($this->lines, $from + 1, $nbr_of_lines_to_remove, //$replacement_text
+                $replacement_text_identified);
+            //print_r( $suppressed_lines); die();
         }
 
         public function replace_regexp($from_regexp_pattern, $to_string)
         {
             $subject = $this->lines[$this->current_pointer];
             $matches = 0;
-            $result = preg_replace ($from_regexp_pattern,
-                                 $to_string,
-                                 $subject,
-                                 1,
-                                 $matches);
+            $result = preg_replace($from_regexp_pattern, $to_string, $subject, 1, $matches);
             $this->lines[$this->current_pointer] = $result;
             if ($matches == 1) {
                 // Found and replaced pattern
@@ -172,8 +216,8 @@
                 }
             }
             $this->backup_file();
-            echo "file_put_contents($this->file_to_edit)<br>";
             file_put_contents($this->file_to_edit, $this->lines);
+            $this->lines = [];
         }
 
         // Copy file to backup
@@ -193,8 +237,8 @@
             $suffix = substr($this->file_to_edit, -4);
             // Concatenate time in seconds to original file name
             $backup_file_name = $file_name_without_suffix . '_' . time() . $suffix;
-            echo "********* $backup_file_name ************<br>";
-            copy($this->file_to_edit, $backup_file_name);
+            // ++++ No backup
+            // copy($this->file_to_edit, $backup_file_name);
         }
 
         function display($title)

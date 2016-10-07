@@ -24,7 +24,7 @@ $e->replace($begin,$end,[
     '    }'
 ]);
 
-$e->move_to_begining();
+$e->move_to_beginning();
 $e->insert_before(["+++++++++++++++++"]) ;
 
 $f = $e->search('function ffff($aaaa,$bbbb)');
@@ -54,12 +54,12 @@ $e->replace($begin,$end,[
 $e->move_to_end();
 $e->insert_after(["-----------------"]);
 
-$e->move_to_begining();
+$e->move_to_beginning();
 $f = $e->search("<a>lien</a>");
 $e->insert_before(["<a>lien avant</a>"]);
 $e->insert_before(["<a>lien avant 2</a>"]);
 
-$e->move_to_begining();
+$e->move_to_beginning();
 $f = $e->search("<a>lien</a>");
 $e->insert_after(["<a>lien apres</a>"]);
 $e->insert_after(["<a>lien apres 2</a>"]);

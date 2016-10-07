@@ -21,7 +21,8 @@
     $mc = new Module('malette'        , 'Malette de capteurs', 'malette_capteurs_id', 'Malette contenant 10 capteurs'            );
     $c  = new Module('capteur'        , 'Capteurs'           , 'capteurs_id'        , 'capteur contenu dans une malette'         );
     $s  = new Module('salle'          , 'Salles'             , 'salle_id'           , 'salles indoors'                           );
-    $e  = new Module('equipe'         , 'Equipes'            , 'equipe_id'          , 'equipes'                                  );
+    $e  = new Module('equipe'         , 'Equipes'            , 'equipe_id'          , 'Equipes de joueurs'                       );
+    $j  = new Module('joueur'         , 'Joueurs'            , 'joueur_id'          , 'joueurs en équipe ou individuels'         );
 
     // Relation has many
     $rs_hm_cs = new Has_many($rs, 'Complexes sportifs gérés par ce réseau', $cs);
@@ -39,13 +40,24 @@
     $cs_hm_e = new Has_many($cs, 'Equipes', $e);
     $cs->relations_one_to_many[] = $cs_hm_e;
 
+    // ++++ Deux chemins pour atteindre les joueurs
+    // ++++ Faut se rappeler par ou on arrive et utiliser le bon filtre
+    // ++++ Enlever le filtre précédent à l'arrivée
+    // ++++POur changer de filtre, revenir au niveau supérieur
+    //$cs_hm_j = new Has_many($cs, 'Joueurs', $j);
+    //$cs->relations_one_to_many[] = $cs_hm_j;
+
+    $e_hm_j = new Has_many($e, 'Joueurs', $j);
+    $e->relations_one_to_many[] = $e_hm_j;
+
     // Ajoute modules au modèle
     $m->modules[] = $rs;
     $m->modules[] = $cs;
     $m->modules[] = $mc;
     $m->modules[] = $c;
     $m->modules[] = $e;
-    //$m->affiche();
+    $m->modules[] = $j;
+    $m->affiche();
     // Location of source code to enhance.
     $local_laravel_site = 'H:\wamp-3-32\www\ms_football_salles\2-site';
     $g = new Sixmo_code_generator($local_laravel_site);

@@ -97,7 +97,6 @@
                 'if (!is_null($id))',
                 '    \Session::put("' . $module->id_key .'", $id);'
             ];
-            print_r($save_key); echo '<hr>';
             $editor->find('function getIndex( Request $request )');
             $editor->find('{');
             $editor->insert($save_key);
@@ -129,7 +128,6 @@
                     '$columns[\''. $module->id_key . '\']' . ' = '  . '$id;' ,
                     '$this->data[\'row\'] = $columns;'
                 ];
-            //print_r($init_key); echo '<hr>';
             $editor->find('function getUpdate(Request $request, $id = null)');
             $editor->find('$this->data[\'row\'] = $this->model->getColumnTable');
             $editor->insert($init_key);
@@ -189,13 +187,14 @@
 
             $file_path = 'app\\Models' . '\\' . $module->nom . '.php';
             $full_file_path = $this->laravel_project_path . '\\' . $file_path;
-            echo "<h1>$full_file_path</h1>";
             $this->full_file_path = $full_file_path;
             $editor = new Batch_script_editor($full_file_path);
 
             // Read controller source code for injection of generated code
             $begin = $editor->find('public static function queryWhere(  ){');
             $end = $editor->find('}');
+            echo "$full_file_path<br>";
+            echo "$begin $end<hr>";
             // Replace function body by generated code
             $editor->replace($begin, $end, $filter);
             $editor->save();

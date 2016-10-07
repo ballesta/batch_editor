@@ -35,9 +35,6 @@
                              . '\\'
                              . $file_path_in_project;
             $this->content = file_get_contents($this->file_path);
-            //echo '<hr>';
-            //echo $this->content;
-            //echo '<hr>';
         }
 
         function inject_source_code_end()
@@ -45,13 +42,10 @@
             file_get_contents($this->file_path, $this->content);
         }
 
-
         // Remove generated code between '//{{' ... '//}}' markers
         function remove_generated_code()
         {
         }
-
-
 
         abstract function modele_begin(Modele $modele);
 

@@ -8,12 +8,14 @@
  */
 function ffff($aaaa,$bbbb)
 {
+//(( Code generated begin
     $a[]=$b;
     // Nouveau texte substitue bbbb
     // Nouveau texte substitue cccc
     // Nouveau texte substitue dddd
     // Nouveau texte substitue eeee
     }
+//)) Code generated end
 }
 function gggg($aaaa,$bbbb)
 {
