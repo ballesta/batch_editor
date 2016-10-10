@@ -28,7 +28,8 @@
 
         function has_many_begin(Modele $modele, Module $module, Has_many $has_many)
         {
-            echo '----has_many_begin ---- ', $module->nom, '<br>';
+            echo '----has_many_begin ---- ',
+                 $module->nom, ' hasmany ', $has_many->module_detail->nom . '<br>';
             $this->insert_link_to_detail_grid($modele, $module, $has_many);
             $this->insert_remember_filter_key_into_controller($modele, $module, $has_many);
             $this->insert_init_parent_key_into_controller($modele, $module, $has_many);
@@ -41,17 +42,19 @@
             $file_path = 'resources\\views' . '\\' . $module->nom . '\\index.blade.php';
             $full_file_path = $this->laravel_project_path . '\\' . $file_path;
             // Save path to wite generated file
-            $this->full_file_path = $full_file_path;
-            $editor = new Batch_script_editor($full_file_path);
+            //$this->full_file_path = $full_file_path;
+            $this->editor->edit($full_file_path);
 
             // Do the changes
 
             // 1. Enlarge action column to cope with added buttons
             //    ------------------------------------------------
-            $editor->find("{{ Lang::get('core.btn_action') }}");
-            $action_column_width = $editor->find_regex('/width="([0-9]+)"/');
-            $enlarged_column_width = $action_column_width[1] + 130;
-            $editor->replace_regexp('/width="([0-9]+)"/','width="' . $enlarged_column_width .'"');
+            $this->editor->find("{{ Lang::get('core.btn_action') }}");
+            $action_column_width = $this->editor->find_regex('/width="([0-9]+)/');
+            //$enlarged_column_width = $action_column_width[1] + 130;
+            $enlarged_column_width = "33%";
+            $this->editor->replace_regexp('/width="([0-9]+)/','width="'
+                                    . $enlarged_column_width .'"');
 
             // 2. Insert link to detail view of current line
             //    ------------------------------------------
@@ -69,11 +72,11 @@
              '!!}'
             ];
 
-            $editor->find('@foreach ($tableGrid as $field)');
-            $editor->find('@endforeach');
-            $editor->find('<td>');
-            $editor->insert($link_to_detail);
-            $editor->save();
+            $this->editor->find('@foreach ($tableGrid as $field)');
+            $this->editor->find('@endforeach');
+            $this->editor->find('<td>');
+            $this->editor->insert($link_to_detail);
+            $this->editor->save();
         }
 
         function insert_remember_filter_key_into_controller($modele, $module, Has_many $has_many)
@@ -83,24 +86,28 @@
             $file_path = 'app\\Http\\Controllers' . '\\' . $detail_module_name . 'Controller.php';
             $full_file_path = $this->laravel_project_path . '\\' . $file_path;
             // Save path to wite generated file
-            $this->full_file_path = $full_file_path;
-            $editor = new Batch_script_editor($full_file_path);
+            //$this->full_file_path = $full_file_path;
+            $this->editor->edit($full_file_path);
 
             // Do the changes
 
             // 1. Get Key from URL then add it to Session
-            //        $club_id = $request->query("club_id"); // =>1
+            //        $club_id = $request->query("club_id");
             //        \Session::put("club_id", $club_id);
             $save_key =
             [
+                '// Get parameter in URL to use it as filter',
                 '$id'. ' = ' . '$request->query("' . $module->id_key . '");',
                 'if (!is_null($id))',
+                //'    \Session::put("' . $module->id_key . '_active_filter' . "',"
+                //                  . $module->id_key ."');",
                 '    \Session::put("' . $module->id_key .'", $id);'
             ];
-            $editor->find('function getIndex( Request $request )');
-            $editor->find('{');
-            $editor->insert($save_key);
-            $editor->save();
+
+            $this->editor->find('function getIndex( Request $request )');
+            $this->editor->find('{');
+            $this->editor->insert($save_key);
+            $this->editor->save();
         }
 
         function insert_init_parent_key_into_controller($modele, $module, $has_many)
@@ -111,7 +118,7 @@
             $full_file_path = $this->laravel_project_path . '\\' . $file_path;
             // Save path to wite generated file
             //$this->full_file_path = $full_file_path;
-            $editor = new Batch_script_editor($full_file_path);
+            $this->editor->edit($full_file_path);
 
             // Do the changes
 
@@ -128,10 +135,10 @@
                     '$columns[\''. $module->id_key . '\']' . ' = '  . '$id;' ,
                     '$this->data[\'row\'] = $columns;'
                 ];
-            $editor->find('function getUpdate(Request $request, $id = null)');
-            $editor->find('$this->data[\'row\'] = $this->model->getColumnTable');
-            $editor->insert($init_key);
-            $editor->save();
+            $this->editor->find('function getUpdate(Request $request, $id = null)');
+            $this->editor->find('$this->data[\'row\'] = $this->model->getColumnTable');
+            $this->editor->insert($init_key);
+            $this->editor->save();
 
 
         }
@@ -188,16 +195,16 @@
             $file_path = 'app\\Models' . '\\' . $module->nom . '.php';
             $full_file_path = $this->laravel_project_path . '\\' . $file_path;
             $this->full_file_path = $full_file_path;
-            $editor = new Batch_script_editor($full_file_path);
+            $this->editor->edit($full_file_path);
 
             // Read controller source code for injection of generated code
-            $begin = $editor->find('public static function queryWhere(  ){');
-            $end = $editor->find('}');
+            $begin = $this->editor->find('public static function queryWhere(  ){');
+            $end = $this->editor->find('}');
             echo "$full_file_path<br>";
             echo "$begin $end<hr>";
             // Replace function body by generated code
-            $editor->replace($begin, $end, $filter);
-            $editor->save();
+            $this->editor->replace($begin, $end, $filter);
+            $this->editor->save();
         }
 
         function belongs_to_end(Modele $modele, Module $module, Module $parent)

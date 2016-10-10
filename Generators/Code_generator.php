@@ -21,11 +21,15 @@
         var $content;
         // Path of file being generated
         var $full_file_path;
-
+        // Trace files generated to remove existing generated code
+        var $file_already_generated= [];
 
         function __construct($laravel_project_path)
         {
+            // Remember project
             $this->laravel_project_path = $laravel_project_path;
+            // Editor session for whole code generation session
+            $this->editor = new Batch_script_editor();
         }
 
         // Add generated source code to a file
@@ -40,11 +44,6 @@
         function inject_source_code_end()
         {
             file_get_contents($this->file_path, $this->content);
-        }
-
-        // Remove generated code between '//{{' ... '//}}' markers
-        function remove_generated_code()
-        {
         }
 
         abstract function modele_begin(Modele $modele);

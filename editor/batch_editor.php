@@ -12,48 +12,67 @@
         var $file_to_edit;
         var $lines;
         var $current_pointer;
+        // File already cleaned up of previous (existing) generated code)
+        var $file_already_cleaned=[];
         var $generated_block_begin = '//(( Code generated begin';
         var $generated_block_end   = '//)) Code generated end';
 
-        function __construct($file_to_edit)
+        function __construct()
+        {
+            // To keep track of cleaned files (suppress existing generated block)
+            $this->file_already_cleaned=[];
+        }
+
+        function edit($file_to_edit)
         {
             // Remember file name
             $this->file_to_edit = $file_to_edit;
             // Read file to edit in array
-            $this->lines = file($file_to_edit, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-            // Init search pointer to beginning of file
-            $this->current_pointer = 0;
+            $this->lines = file($file_to_edit,
+                                FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            // First time seen only
             $this->remove_generated_code_blocks();
-            $this->current_pointer = 0;
         }
 
         /**
          * Remove generated code
-         * Used before to regenerate.
-         *
+         * Used before to regenerate from Code_generator .
+         * Adds file to already_generated
+         * File content already in core
          */
         function remove_generated_code_blocks()
         {
-            do {
-                $block_deleted = false;
-                $this->move_to_beginning();
-                $begin = $this->search($this->generated_block_begin);
-                if (!($begin === FALSE)) {
-                    // Found beginning of generated code
-                    $end = $this->search($this->generated_block_end);
-                    if (!($end === FALSE))
-                    {
-                        // Found corresponding end of generated code
-                        // Delete block including open dans close markers
-                        $this->delete($begin - 1, $end + 1);
-                        $block_deleted = true;
+            // First time file encountered ?
+            if (!isset($this->file_already_cleaned[$this->file_to_edit]))
+            {
+                echo "<br>**** clean: $this->file_to_edit]<hr>";
+                do {
+                    // Yes: remove generated code
+                    // Init search pointer to beginning of file
+                    $block_deleted = FALSE;
+                    $this->move_to_beginning();
+                    $begin = $this->search($this->generated_block_begin);
+                    if (!($begin === FALSE)) {
+                        // Found beginning of generated code
+                        $end = $this->search($this->generated_block_end);
+                        if (!($end === FALSE)) {
+                            // Found corresponding end of generated code
+                            // Delete block including open dans close markers
+                            $this->delete($begin - 1, $end + 1);
+                            $block_deleted = TRUE;
+
+                        } else {
+                            echo "No end of generated code, line : $begin";
+                            die();
+                        }
                     }
-                    else {
-                        echo "No end of generated code, line : $begin";
-                        die();
-                    }
-                }
-            } while ($block_deleted);
+                } while ($block_deleted);
+                // Done only once (first time file encountered)
+                // Will not be processed next time
+                $this->file_already_cleaned[$this->file_to_edit] = TRUE;
+            }
+            var_dump($this->file_already_cleaned);
+            $this->move_to_beginning();
         }
 
         function move_to_beginning()
