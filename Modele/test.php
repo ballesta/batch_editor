@@ -16,16 +16,24 @@
     $m = new Modele('football', 'Complexes sportifs de Football en salle');
 
     // Modules
-    $rs = new Module('reseauxsalles'  ,'Réseaux de salles'  ,'club_id'            ,'Réseaux de complexes sportifs'            );
-    $cs = new Module('complexesportif','Complexes sportifs' ,'complexe_salle_id'  ,'Locations de terrains de football indoors');
-    $s  = new Module('salle'          ,'Salles'             ,'salle_id'           ,'salles indoors'                           );
-    $mc = new Module('malette'        ,'Malettes','malette_capteurs_id','Malette contenant 10 capteurs'            );
-    $c  = new Module('capteur'        ,'Capteurs'           ,'capteurs_id'        ,'capteur contenu dans une malette'         );
-    $e  = new Module('equipe'         ,'Equipes'            ,'equipe_id'          ,'Equipes de joueurs'                       );
-    $j  = new Module('joueur'         ,'Joueurs'            ,'joueur_id'          ,'joueurs en équipe ou individuels'         );
-
+    $rs = new Module('reseauxsalles'  ,'Réseaux de salles'  ,'club_id'
+                    ,'Réseaux de complexes sportifs'            );
+    $cs = new Module('complexesportif','Centres' ,'complexe_salle_id'
+                    ,'Locations de terrains de football indoors');
+    $s  = new Module('salle'          ,'Terrains'             ,'salle_id'
+                    ,'salles indoors');
+    $mc = new Module('malette'        ,'Malettes','malette_capteurs_id'
+                     ,'Malette contenant 10 capteurs');
+    $c  = new Module('capteur'        ,'Capteurs'           ,'capteurs_id'
+                     ,'capteur contenu dans une malette');
+    $e  = new Module('equipe'         ,'Equipes'            ,'equipe_id'
+                     ,'Equipes de joueurs'                       );
+    $j  = new Module('joueur'         ,'Joueurs'            ,'joueur_id'
+                     ,'joueurs en équipe ou individuels'         );
     $p  = new Module('partie'         ,'Parties'            ,'partie_id'
                     ,'Partie d\'une équipe dans une salle'         );
+    $js  = new Module('joueurselectionne'         ,'Joueurs','partie_id'
+                    ,'Joueurs sélectionnés pour la partie'         );
 
     // Relation has many
     $rs_hm_cs = new Has_many($rs, 'Complexes sportifs gérés par ce réseau', $cs);
@@ -55,6 +63,9 @@
     $e_hm_j = new Has_many($e, 'Joueurs', $j);
     $e->relations_one_to_many[] = $e_hm_j;
 
+    $p_hm_js = new Has_many($p, 'Joueurs Sélectionnés', $js);
+    $p->relations_one_to_many[] = $p_hm_js;
+
     // Ajoute modules au modèle
     $m->modules[] = $rs;
     $m->modules[] = $cs;
@@ -64,6 +75,7 @@
     $m->modules[] = $j;
     $m->modules[] = $s;
     $m->modules[] = $p;
+    $m->modules[] = $js;
     $m->affiche();
     // Location of source code to enhance.
     $local_laravel_site = 'H:\wamp-3-32\www\ms_football_salles\2-site';

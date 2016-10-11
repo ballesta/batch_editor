@@ -52,7 +52,7 @@
             $this->editor->find("{{ Lang::get('core.btn_action') }}");
             $action_column_width = $this->editor->find_regex('/width="([0-9]+)/');
             //$enlarged_column_width = $action_column_width[1] + 130;
-            $enlarged_column_width = "33%";
+            $enlarged_column_width = "40%";
             $this->editor->replace_regexp('/width="([0-9]+)/','width="'
                                     . $enlarged_column_width .'"');
 
