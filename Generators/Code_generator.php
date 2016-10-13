@@ -1,5 +1,4 @@
 <?php
-
     /**
      * Code generators base class
      *
