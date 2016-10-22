@@ -15,22 +15,47 @@
 
     $modele = new Modele('football', 'Complexes sportifs de Football en salle');
 
-    // Modules
-    $rs = new Module('reseauxsalles', 'Réseaux de salles', 'club_id', 'Réseaux de complexes sportifs');
-    $cs = new Module('complexesportif', 'Centres', 'complexe_salle_id', 'Locations de terrains de football indoors');
-    $s = new Module('salle'   , 'Terrains', 'salle_id', 'salles indoors');
-    $mc = new Module('malette', 'Malettes', 'malette_capteurs_id', 'Malette contenant 10 capteurs');
-    $c = new Module('capteur' , 'Capteurs', 'capteurs_id', 'capteur contenu dans une malette');
-    $e = new Module('equipe'  , 'Equipes', 'equipe_id', 'Equipes de joueurs');
-    $j = new Module('joueur'  , 'Joueurs', 'joueur_id', 'joueurs en équipe ou individuels');
-    $p = new Module('partie'  , 'Parties', 'partie_id', 'Partie d\'une équipe dans une salle');
-    $js = new Module('joueurselectionne', 'Joueurs', 'partie_id', 'Joueurs sélectionnés pour la partie');
+    //-- Modules --//
 
-    $sm = new Module('sessionmesure', 'Sessions', 'session_mesure_id', 'Session de mesures');
+    $rs = new Module('reseauxsalles', 'Réseaux de salles', 'club_id', 'nom',
+                     'Réseaux de complexes sportifs');
 
-    $mesure = new Module('mesure', 'Mesures', 'mesure_id', 'Mesures');
+    $cs = new Module('complexesportif', 'Centres', 'complexe_salle_id','nom',
+                     'Locations de terrains de football indoors');
 
-    // Relation has many
+    $s =  new Module('salle'   , 'Terrains', 'salle_id', 'identifiant',
+                     'Salles indoors');
+
+    $csj =  new Module('joueurCentre'   , 'Joueurs', 'joueur_id', 'nom',
+                       'Joueurs du centre');
+
+    $mc = new Module('malette', 'Malettes', 'malette_capteurs_id', 'identifiant',
+                     'Malette contenant 10 capteurs');
+
+    $c =  new Module('capteur' , 'Capteurs', 'capteurs_id', 'numero_serie',
+                     'Capteur contenu dans une malette');
+
+    $e =  new Module('equipe'  , 'Equipes', 'equipe_id', 'nom',
+                     'Equipes de joueurs');
+
+    $j =  new Module('joueur'  , 'Joueurs', 'joueur_id', 'nom',
+                     'Joueurs en équipe ou individuels');
+
+    $p =  new Module('partie'  , 'Parties', 'partie_id', 'debut',
+                     'Partie d\'une équipe dans une salle');
+
+    $js = new Module('joueurselectionne', 'Joueurs', 'joueur_selectionne_id', '',
+                     'Joueurs sélectionnés pour la partie');
+
+    $sm = new Module('sessionmesure', 'Sessions mesures', 'session_mesure_id',
+                     'date_heure',
+                     'Session de mesures avec un capteur');
+
+    $mesure = new Module('mesure', 'Mesures', 'mesure_id', '',
+                         'Mesures de la partie');
+
+    //-- Relations 'has many' --//
+
     $rs_hm_cs = new Has_many($rs, 'Complexes sportifs gérés par ce réseau', $cs);
     $rs->relations_one_to_many[] = $rs_hm_cs;
 
@@ -40,13 +65,19 @@
     $cs_hm_s = new Has_many($cs, 'Salles du complexe sportif', $s);
     $cs->relations_one_to_many[] = $cs_hm_s;
 
-    $mc_hm_c = new Has_many($mc, 'Capteurs contenus dans une malette', $c);
+
+    $cs_hm_csj = new Has_many($cs, 'Joueurs du complexe sportif', $csj);
+    $cs->relations_one_to_many[] = $cs_hm_csj;
+
+    $mc_hm_c = new Has_many($mc, 'Capteurs contenus dans la malette', $c);
     $mc->relations_one_to_many[] = $mc_hm_c;
 
-    $cs_hm_e = new Has_many($cs, 'Equipes', $e);
+    $cs_hm_e = new Has_many($cs,
+                            'Equipes de joueurs praztiquant régulièrement ensemble',
+                            $e);
     $cs->relations_one_to_many[] = $cs_hm_e;
 
-    $s_hm_p = new Has_many($s, 'Parties', $p);
+    $s_hm_p = new Has_many($s, 'Parties ayant eu lieu sur ce terrain', $p);
     $s->relations_one_to_many[] = $s_hm_p;
     // ++++ Deux chemins pour atteindre les joueurs
     // ++++ Faut se rappeler par ou on arrive et utiliser le bon filtre
@@ -55,16 +86,20 @@
     //$cs_hm_j = new Has_many($cs, 'Joueurs', $j);
     //$cs->relations_one_to_many[] = $cs_hm_j;
 
-    $e_hm_j = new Has_many($e, 'Joueurs', $j);
+    $e_hm_j = new Has_many($e, 'Joueurs membres de l\'equipe (jouent fréquement ensembles)', $j);
     $e->relations_one_to_many[] = $e_hm_j;
 
-    $p_hm_js = new Has_many($p, 'Joueurs Sélectionnés', $js);
+    $p_hm_js = new Has_many($p, 'Joueurs Sélectionnés pour la partie', $js);
     $p->relations_one_to_many[] = $p_hm_js;
 
-    $js_hm_sm = new Has_many($js, 'Session mesures', $sm);
+    $js_hm_sm = new Has_many($js,
+                             'Session mesures avec le même capteur ' .
+                             '(Chaque changement de capteur donne lieu '.
+                             'à une nouvelle session)',
+                             $sm);
     $js->relations_one_to_many[] = $js_hm_sm;
 
-    $sm_hm_m = new Has_many($sm, 'Mesures', $mesure);
+    $sm_hm_m = new Has_many($sm, 'Mesures enregistrées au cours de la session', $mesure);
     $sm->relations_one_to_many[] = $sm_hm_m;
 
     // Ajoute modules au modèle

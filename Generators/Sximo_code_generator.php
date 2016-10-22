@@ -64,10 +64,13 @@
             $link_to_detail =
             ['{!!',
                 '\Navigation::link_to_detail(  '                   ,
-                '$text      = ' . "'$module_title',"               ,
-                '$help      = ' . "'$has_many->explications',"     ,
-                '$url       = ' . "URL::to('$module_name')," ,
-                '$parent_key= ' . "'$module->id_key',"             ,
+                '$text        = ' . "'$module_title',"               ,
+                '$help        = ' . "'$has_many->explications',"     ,
+                '$url         = ' . "URL::to('$module_name'),"       ,
+                '$parent_key  = ' . "'$module->id_key',"             ,
+
+                '$parent_label= ' . "'$module->identifier',"         ,
+
                 '$parent_id = ' . '$row->' . $module->id_key .")"  ,
              '!!}'
             ];
