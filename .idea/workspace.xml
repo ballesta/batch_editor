@@ -4,7 +4,7 @@
     <option name="SCOPE_TYPE" value="3" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b2430f47-717e-461a-bbcc-c0171144bd7c" name="Default" comment="">
+    <list default="true" id="b2430f47-717e-461a-bbcc-c0171144bd7c" name="Default" comment="Ajouté Parent label pour breadcrumb">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="batch_editor.iws" />
@@ -105,8 +105,8 @@
       <file leaf-file-name="Sximo_code_generator.php" pinned="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Generators/Sximo_code_generator.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="735">
-              <caret line="71" column="14" selection-start-line="71" selection-start-column="14" selection-end-line="71" selection-end-column="14" />
+            <state relative-caret-position="385">
+              <caret line="61" column="8" selection-start-line="61" selection-start-column="7" selection-end-line="61" selection-end-column="8" />
               <folding>
                 <element signature="e#11#114#0#PHP" expanded="true" />
               </folding>
@@ -232,8 +232,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -254,6 +252,8 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -361,7 +361,9 @@
       <workItem from="1476813225916" duration="772000" />
       <workItem from="1476867131761" duration="4644000" />
       <workItem from="1477041410317" duration="1741000" />
-      <workItem from="1477157980795" duration="695000" />
+      <workItem from="1477157980795" duration="720000" />
+      <workItem from="1477173644183" duration="110000" />
+      <workItem from="1477228868928" duration="1137000" />
     </task>
     <task id="LOCAL-00001" summary="Ajouté Parent label pour breadcrumb">
       <created>1477173580321</created>
@@ -377,17 +379,24 @@
       <option name="project" value="LOCAL" />
       <updated>1477173592333</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Ajouté Parent label pour breadcrumb">
+      <created>1477173599324</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1477173599324</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="135934000" />
+    <option name="totallyTimeSpent" value="137206000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1048" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18045112" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1858217" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -823,8 +832,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Generators/Sximo_code_generator.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="735">
-          <caret line="71" column="14" selection-start-line="71" selection-start-column="14" selection-end-line="71" selection-end-column="14" />
+        <state relative-caret-position="385">
+          <caret line="61" column="8" selection-start-line="61" selection-start-column="7" selection-end-line="61" selection-end-column="8" />
           <folding>
             <element signature="e#11#114#0#PHP" expanded="true" />
           </folding>
