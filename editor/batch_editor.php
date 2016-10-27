@@ -45,7 +45,7 @@
             // First time file encountered ?
             if (!isset($this->file_already_cleaned[$this->file_to_edit]))
             {
-                echo "<br>**** clean: $this->file_to_edit]<hr>";
+                //echo "<br>**** clean: $this->file_to_edit]<hr>";
                 do {
                     // Yes: remove generated code
                     // Init search pointer to beginning of file
@@ -71,7 +71,7 @@
                 // Will not be processed next time
                 $this->file_already_cleaned[$this->file_to_edit] = TRUE;
             }
-            var_dump($this->file_already_cleaned);
+            //var_dump($this->file_already_cleaned);
             $this->move_to_beginning();
         }
 

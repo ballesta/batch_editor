@@ -6,12 +6,12 @@
      * Time: 13:21
      */
 
-    include 'Modele.php';
-    include 'Module.php';
-    include 'Has_many.php';
+    include '../../Modele/Modele.php';
+    include '../../Modele/Module.php';
+    include '../../Modele/Has_many.php';
 
-    include '../Generators/Sximo_code_generator.php';
-    echo '<h1>Test modèles</h1>';
+    include '../../Generators/Sximo_code_generator.php';
+    echo '<h1>Modèle de salles de football indoors</h1>';
 
     $modele = new Modele('football', 'Complexes sportifs de Football en salle');
 
@@ -118,5 +118,9 @@
     // Location of source code to enhance.
     $local_laravel_site = 'H:\wamp-3-32\www\ms_football_salles\2-site';
     $g = new Sixmo_code_generator($local_laravel_site);
+    //$modele->compile();
+    //$modele->breadcrumb();
+    //$a = $modele->breadcrumb_ascendants($mesure);
+    //var_dump($a);
     $modele->generate_code($g);
 ?>

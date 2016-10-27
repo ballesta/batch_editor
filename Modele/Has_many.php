@@ -20,6 +20,6 @@ class Has_many
 
         echo "Crée $module_detail->nom belongs to $module->nom ($explications) <br>";
 
-        $module_detail->belongs_to[] = $module;
+        $module_detail->relations_belongs_to_one[] = $module;
     }
 }

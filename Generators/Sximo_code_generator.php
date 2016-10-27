@@ -8,7 +8,7 @@
      */
 
     // Base class of all code generators
-    include '../Generators/Code_generator.php';
+    include '../../Generators/Code_generator.php';
 
     class Sixmo_code_generator extends Code_generator
     {
@@ -82,11 +82,20 @@
             $this->editor->save();
         }
 
-        function insert_remember_filter_key_into_controller($modele, $module, Has_many $has_many)
+        function insert_remember_filter_key_into_controller
+        (
+        	Modele      $modele,
+	        Module      $module,
+	        Has_many    $has_many
+        )
         {
+        	// Module modified is the detail module of the 'has many' relation.
+	        // Not the module itself.
             // Get file to update
             $detail_module_name = $has_many->module_detail->nom;
-            $file_path = 'app\\Http\\Controllers' . '\\' . $detail_module_name . 'Controller.php';
+	        $detail_module_name_title = $has_many->module_detail->title;
+            $file_path  = 'app\\Http\\Controllers'
+	                    . '\\' . $detail_module_name . 'Controller.php';
             $full_file_path = $this->laravel_project_path . '\\' . $file_path;
             // Save path to wite generated file
             //$this->full_file_path = $full_file_path;
@@ -104,7 +113,19 @@
                 'if (!is_null($id))',
                 //'    \Session::put("' . $module->id_key . '_active_filter' . "',"
                 //                  . $module->id_key ."');",
-                '    \Session::put("' . $module->id_key .'", $id);'
+                '    \Session::put("' . $module->id_key .'", $id);',
+	            '$id = \Session::get("' . $module->id_key . '", null);',
+	            '// Check if parent already selected',
+	            'if (is_null($id))',
+	            '{',
+		        'return Redirect::to("' . $module->nom . '")',
+			    '    ->with("messagetext",',
+				'        "Vous devez d\'abord sélectionner votre <br> "',
+				'        ."<i>' . $module->title .'</i> <br>"',
+				'        ."avant de choisir <br>"',
+				'        ."<i>'. $detail_module_name_title .'</i>")',
+			    '    ->with("msgstatus","warning");',
+	            '}'
             ];
 
             $this->editor->find('function getIndex( Request $request )');
@@ -117,7 +138,10 @@
         {
             // Get file to update
             $detail_module_name = $has_many->module_detail->nom;
-            $file_path = 'app\\Http\\Controllers' . '\\' . $detail_module_name . 'Controller.php';
+            $file_path  = 'app\\Http\\Controllers'
+	                    . '\\'
+	                    . $detail_module_name
+	                    . 'Controller.php';
             $full_file_path = $this->laravel_project_path . '\\' . $file_path;
             // Save path to wite generated file
             //$this->full_file_path = $full_file_path;

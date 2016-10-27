@@ -14,7 +14,7 @@ class Module
     var $explications;
 
     var $relations_one_to_many=[];
-    var $belongs_to=[];
+    var $relations_belongs_to_one=[];
 
     function __construct($nom, $title, $id_key, $identifier, $explications)
     {
@@ -24,5 +24,8 @@ class Module
         $this->id_key       = $id_key;
         $this->identifier   = $identifier;
         $this->explications = $explications;
+
+	    $this->relations_one_to_many   =[];
+	    $this->relations_belongs_to_one=[];
     }
 }

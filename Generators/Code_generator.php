@@ -8,7 +8,7 @@
      * Time: 16:08
      */
 
-    include '../editor/batch_editor.php';
+    include '../../editor/batch_editor.php';
 
     abstract class Code_generator
     {
