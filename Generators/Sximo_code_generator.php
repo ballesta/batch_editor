@@ -49,12 +49,11 @@
 
             // 1. Enlarge action column to cope with added buttons
             //    ------------------------------------------------
-            $this->editor->find("{{ Lang::get('core.btn_action') }}");
-            $action_column_width = $this->editor->find_regex('/width="([0-9]+)/');
-            //$enlarged_column_width = $action_column_width[1] + 130;
-            $enlarged_column_width = "40%";
-            $this->editor->replace_regexp('/width="([0-9]+)/','width="'
-                                    . $enlarged_column_width .'"');
+            // Find line containing pattern
+	        $this->editor->find("{{ Lang::get('core.btn_action') }}");
+			// Replace in current line
+            $this->editor->replace_regexp('#<th width=.+><span>(.+)</span></th>#'
+	                                     ,'<th width="40%"><span>${1}</span></th>');
 
             // 2. Insert link to detail view of current line
             //    ------------------------------------------

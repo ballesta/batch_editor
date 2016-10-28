@@ -195,11 +195,16 @@
             //print_r( $suppressed_lines); die();
         }
 
+        // Replace regexp in current line
         public function replace_regexp($from_regexp_pattern, $to_string)
         {
-            $subject = $this->lines[$this->current_pointer];
+            $line = $this->lines[$this->current_pointer];
             $matches = 0;
-            $result = preg_replace($from_regexp_pattern, $to_string, $subject, 1, $matches);
+            $result = preg_replace( $from_regexp_pattern
+	                              , $to_string
+	                              , $line
+	                              , 1
+	                              , $matches);
             $this->lines[$this->current_pointer] = $result;
             if ($matches == 1) {
                 // Found and replaced pattern
