@@ -17,34 +17,34 @@
 
     //-- Modules --//
 
-    $rs = new Module('reseauxsalles', 'Réseaux de salles', 'club_id', 'nom',
+    $rs = new Module('reseauxsalles', 'Réseau de salles', 'club_id', 'nom',
                      'Réseaux de complexes sportifs');
 
-    $cs = new Module('complexesportif', 'Centres', 'complexe_salle_id','nom',
+    $cs = new Module('complexesportif', 'Centre sportif', 'complexe_salle_id','nom',
                      'Locations de terrains de football indoors');
 
-    $s =  new Module('salle'   , 'Terrains', 'salle_id', 'identifiant',
+    $s =  new Module('salle'   , 'Terrain', 'salle_id', 'identifiant',
                      'Salles indoors');
 
-    $csj =  new Module('joueurCentre'   , 'Joueurs', 'joueur_id', 'nom',
+    $csj =  new Module('joueurCentre'   , 'Joueur', 'joueur_id', 'nom',
                        'Joueurs du centre');
 
-    $mc = new Module('malette', 'Malettes', 'malette_capteurs_id', 'identifiant',
+    $mc = new Module('malette', 'Malette', 'malette_capteurs_id', 'identifiant',
                      'Malette contenant 10 capteurs');
 
-    $c =  new Module('capteur' , 'Capteurs', 'capteurs_id', 'numero_serie',
+    $c =  new Module('capteur' , 'Capteur', 'capteurs_id', 'numero_serie',
                      'Capteur contenu dans une malette');
 
-    $e =  new Module('equipe'  , 'Equipes', 'equipe_id', 'nom',
+    $e =  new Module('equipe'  , 'Equipe', 'equipe_id', 'nom',
                      'Equipes de joueurs');
 
     $j =  new Module('joueur'  , 'Joueurs', 'joueur_id', 'nom',
                      'Joueurs en équipe ou individuels');
 
-    $p =  new Module('partie'  , 'Parties', 'partie_id', 'debut',
+    $p =  new Module('partie'  , 'Partie', 'partie_id', 'debut',
                      'Partie d\'une équipe dans une salle');
 
-    $js = new Module('joueurselectionne', 'Joueurs', 'joueur_selectionne_id', '',
+    $js = new Module('joueurselectionne', 'Joueur sélectionné', 'joueur_selectionne_id', '',
                      'Joueurs sélectionnés pour la partie');
 
     $sm = new Module('sessionmesure', 'Sessions mesures', 'session_mesure_id',

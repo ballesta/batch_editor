@@ -36,13 +36,14 @@
             $this->insert_remember_filter_key_into_controller($modele, $module, $has_many);
             $this->insert_init_parent_key_into_controller($modele, $module, $has_many);
         }
-		// !!!!!!!!!!!!!!!!!!!!!
+
 	    // Insert modules breadcrumb
 	    function insert_breadcrum(Modele $modele, Module $module)
 	    {
 		    // Get file to update
 		    $file_path = 'resources\\views' . '\\' . $module->nom . '\\index.blade.php';
 		    $full_file_path = $this->laravel_project_path . '\\' . $file_path;
+		    // Remove generated code previously generated code on first read
 		    $this->editor->edit($full_file_path);
 
 		    // Do the changes
@@ -50,21 +51,34 @@
 		    // Find line containing pattern
 		    $this->editor->find('<div class="sbox">');
 		    // Insert after current line
-		    $b=[];
 		    $parents_modules_inverse = $module->breadcrumb_ascendants($module);
 		    $parents_modules = array_reverse($parents_modules_inverse);
-		    $b[] = '<table>';
-		    $b[] = '<tr>';
-		    if (count($parents_modules) > 0) {
-			    foreach ($parents_modules as $m) {
-				    $b[] = '<td>' . $m->nom . ' > </td>';
+		    $nbr_breadcrumb = count($parents_modules);
+		    $n=1;
+		    if ($nbr_breadcrumb > 0) {
+			    $b=[];
+			    $b[] = '<table>';
+			    $b[] = '<tr>';
+			    foreach ($parents_modules as $m)
+			    {
+					// Entity type
+				    $b[] = '<td>';
+				    $b[] = '<small>' . $m->title . '</small><br>';
+				    $b[] = '<strong>' . $m->title . '</strong>';
+				    $b[] = '<td>';
+				    // Breadcrumb separator if not last displayed
+				    if ($n < $nbr_breadcrumb) {
+					    $b[] = '<td>';
+					    $b[] = '&nbsp;&nbsp;<i class="icon-arrow-right2"></i>&nbsp;&nbsp;';
+					    $b[] = '<td>';
+				    }
+				    $n++;
 			    }
-		    } else {
-			    $b[] = 'Empty';
+			    $b[] = '</tr>';
+			    $b[] = '</table>';
+			    $this->editor->insert($b);
 		    }
-		    $b[] = '</tr>';
-		    $b[] = '</table>';
-		    $this->editor->insert($b);
+		    // Must save even if nothing changed
 		    $this->editor->save();
 	    }
 
@@ -100,9 +114,7 @@
                 '$help        = ' . "'$has_many->explications',"     ,
                 '$url         = ' . "URL::to('$module_name'),"       ,
                 '$parent_key  = ' . "'$module->id_key',"             ,
-
                 '$parent_label= ' . "'$module->identifier',"         ,
-
                 '$parent_id = ' . '$row->' . $module->id_key .")"  ,
              '!!}'
             ];
