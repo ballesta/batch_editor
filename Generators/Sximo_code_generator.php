@@ -23,17 +23,50 @@
         function module_begin(Modele $modele, Module $module)
         {
             echo '--Module begin ', $module->nom, '<br>';
+	        $this->insert_breadcrum($modele, $module);
 
         }
 
         function has_many_begin(Modele $modele, Module $module, Has_many $has_many)
         {
             echo '----has_many_begin ---- ',
-                 $module->nom, ' hasmany ', $has_many->module_detail->nom . '<br>';
+                 $module->nom, ' hasmany ',
+	             $has_many->module_detail->nom . '<br>';
             $this->insert_link_to_detail_grid($modele, $module, $has_many);
             $this->insert_remember_filter_key_into_controller($modele, $module, $has_many);
             $this->insert_init_parent_key_into_controller($modele, $module, $has_many);
         }
+		// !!!!!!!!!!!!!!!!!!!!!
+	    // Insert modules breadcrumb
+	    function insert_breadcrum(Modele $modele, Module $module)
+	    {
+		    // Get file to update
+		    $file_path = 'resources\\views' . '\\' . $module->nom . '\\index.blade.php';
+		    $full_file_path = $this->laravel_project_path . '\\' . $file_path;
+		    $this->editor->edit($full_file_path);
+
+		    // Do the changes
+
+		    // Find line containing pattern
+		    $this->editor->find('<div class="sbox">');
+		    // Insert after current line
+		    $b=[];
+		    $parents_modules_inverse = $module->breadcrumb_ascendants($module);
+		    $parents_modules = array_reverse($parents_modules_inverse);
+		    $b[] = '<table>';
+		    $b[] = '<tr>';
+		    if (count($parents_modules) > 0) {
+			    foreach ($parents_modules as $m) {
+				    $b[] = '<td>' . $m->nom . ' > </td>';
+			    }
+		    } else {
+			    $b[] = 'Empty';
+		    }
+		    $b[] = '</tr>';
+		    $b[] = '</table>';
+		    $this->editor->insert($b);
+		    $this->editor->save();
+	    }
 
         // Insert button in list to drill down to detailed list
         function insert_link_to_detail_grid(Modele $modele, Module $module, Has_many $has_many)

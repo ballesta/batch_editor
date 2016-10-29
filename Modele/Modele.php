@@ -37,24 +37,27 @@ class Modele
     // Compiles model at end of definition
     function compile()
     {
-	    echo "<br>Modèle $this->nom<hr>";
-	    foreach ($this->modules as $m)
+	    echo "<h1>Compile Modèle $this->nom</h1>";
+	    foreach ($this->modules as $module)
 	    {
-		    echo "--Module $m->nom<br>";
-		    $m->relations_belongs_to_one = [];
-		    foreach ($m->relations_one_to_many as $r)
+		    echo "--Module $module->nom<br>";
+		    //$module->relations_belongs_to_one = [];
+		    foreach ($module->relations_one_to_many as $relation_one_to_many)
 		    {
-			    $nom_module = $r->module_detail->nom;
+			    $nom_module = $relation_one_to_many->module_detail->nom;
 			    // Relation inverse de détail vers parent
-			    $r->module_detail->relations_belongs_to_one[] = $m;
+			    $relation_one_to_many->module_detail->relations_belongs_to_one[] = $module;
 			    echo "----Has many $nom_module<br>";
 		    }
 	    }
+	    echo '<hr>';
+		$this->breadcrumb();
+	    echo '<hr>';
     }
 
 	function breadcrumb()
 	{
-		echo "<br>Breadcrum Modèle $this->nom<hr>";
+		echo "<h1>Breadcrum Modèle $this->nom</h1>";
 		foreach ($this->modules as $m)
 		{
 			echo "--Module $m->nom<br>";
@@ -66,21 +69,6 @@ class Modele
 		}
 	}
 
-	function breadcrumb_ascendants(Module $m)
-	{
-		//echo "<br>Breadcrum Modèle $m->nom<hr>";
-	    $ascendants = [];
-		foreach ($m->relations_belongs_to_one as $a)
-		{
-			echo "----1..1 $a->nom<br>";
-
-			$ascendants = array_merge($ascendants,
-				                      $this->breadcrumb_ascendants($a),
-				                      [$a->nom]) ;
-			var_dump($ascendants);
-		}
-		return $ascendants;
-	}
 
     // Visite le modèle et appell le générateur de code pour chaque entité rencontrée.
     function generate_code(Code_generator $g)

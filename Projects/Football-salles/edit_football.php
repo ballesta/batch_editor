@@ -118,9 +118,7 @@
     // Location of source code to enhance.
     $local_laravel_site = 'H:\wamp-3-32\www\ms_football_salles\2-site';
     $g = new Sixmo_code_generator($local_laravel_site);
-    //$modele->compile();
-    //$modele->breadcrumb();
-    //$a = $modele->breadcrumb_ascendants($mesure);
-    //var_dump($a);
+	//$modele->compile();
+	$modele->breadcrumb();
     $modele->generate_code($g);
 ?>

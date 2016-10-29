@@ -28,4 +28,23 @@ class Module
 	    $this->relations_one_to_many   =[];
 	    $this->relations_belongs_to_one=[];
     }
+
+	function breadcrumb_ascendants(Module $m)
+	{
+		//echo "<br>Breadcrum Modèle $m->nom<hr>";
+		$ascendants = [];
+		//var_dump($this->relations_belongs_to_one);
+		foreach ($m->relations_belongs_to_one as $a)
+		{
+			echo "----1..1 $a->nom<br>";
+			$aa = $this->breadcrumb_ascendants($a);
+			echo '$aa';
+			var_dump($aa);
+			$ascendants = array_merge($ascendants, [$a], $aa);
+		}
+		echo '$ascendants';
+		var_dump($ascendants);
+		return $ascendants;
+	}
+
 }
