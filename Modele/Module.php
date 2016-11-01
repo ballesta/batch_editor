@@ -22,7 +22,7 @@ class Module
         $this->nom          = $nom;
         $this->title          = $title;
         $this->id_key       = $id_key;
-        $this->identifier   = $identifier;
+        $this->identifier   = $identifier;  // For Breadcrumb
         $this->explications = $explications;
 
 	    $this->relations_one_to_many   =[];

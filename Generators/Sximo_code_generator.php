@@ -64,7 +64,10 @@
 					// Entity type
 				    $b[] = '<td>';
 				    $b[] = '<small>' . $m->title . '</small><br>';
-				    $b[] = '<strong>' . $m->title . '</strong>';
+				    // Entity label
+				    $id_key = $m->id_key . '_identifier';
+				    $label = "{{ Session::get('$id_key', null) }}";
+				    $b[] = '<strong>' . $label . '</strong>';
 				    $b[] = '<td>';
 				    // Breadcrumb separator if not last displayed
 				    if ($n < $nbr_breadcrumb) {
@@ -109,13 +112,15 @@
             // Prepare button link to details
             $link_to_detail =
             ['{!!',
-                '\Navigation::link_to_detail(  '                   ,
-                '$text        = ' . "'$module_title',"               ,
-                '$help        = ' . "'$has_many->explications',"     ,
-                '$url         = ' . "URL::to('$module_name'),"       ,
-                '$parent_key  = ' . "'$module->id_key',"             ,
-                '$parent_label= ' . "'$module->identifier',"         ,
-                '$parent_id = ' . '$row->' . $module->id_key .")"  ,
+                '\Navigation::link_to_detail(  '                    ,
+                '$text        = ' . "'$module_title',"              ,
+                '$help        = ' . "'$has_many->explications',"    ,
+                '$url         = ' . "URL::to('$module_name'),"      ,
+                '$parent_key  = ' . "'$module->id_key',"            ,
+                '$parent_label= ' . "'$module->identifier',"        ,
+	            '$parent_id   = ' . '$row->' . $module->id_key . ",",
+	            '$parent_name = ' . '$row->' . $module->identifier  ,
+                ')' ,
              '!!}'
             ];
 
@@ -147,18 +152,21 @@
 
             // Do the changes
 
-            // 1. Get Key from URL then add it to Session
+            // 1. Get Key and label from URL then add it to Session
             //        $club_id = $request->query("club_id");
             //        \Session::put("club_id", $club_id);
             $save_key =
             [
                 '// Get parameter in URL to use it as filter',
-                '$id'. ' = ' . '$request->query("' . $module->id_key . '");',
+	            '$id'. ' = ' . '$request->query("' . $module->id_key . '");',
+	            '$identifier'. ' = ' . '$request->query("' . $module->identifier . '");',
                 'if (!is_null($id))',
-                //'    \Session::put("' . $module->id_key . '_active_filter' . "',"
-                //                  . $module->id_key ."');",
+	            '{',
                 '    \Session::put("' . $module->id_key .'", $id);',
+	            '    \Session::put("' . $module->id_key . '_identifier", $identifier);' ,
+	            '}',
 	            '$id = \Session::get("' . $module->id_key . '", null);',
+	            '$active_filter = \Session::get("'. $module->id_key . '_identifier");' ,
 	            '// Check if parent already selected',
 	            'if (is_null($id))',
 	            '{',

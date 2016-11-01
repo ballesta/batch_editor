@@ -44,7 +44,8 @@
     $p =  new Module('partie'  , 'Partie', 'partie_id', 'debut',
                      'Partie d\'une équipe dans une salle');
 
-    $js = new Module('joueurselectionne', 'Joueur sélectionné', 'joueur_selectionne_id', '',
+    $js = new Module('joueurselectionne', 'Joueur sélectionné',
+	                 'joueur_selectionne_id', 'joueur_id',
                      'Joueurs sélectionnés pour la partie');
 
     $sm = new Module('sessionmesure', 'Sessions mesures', 'session_mesure_id',
@@ -72,9 +73,10 @@
     $mc_hm_c = new Has_many($mc, 'Capteurs contenus dans la malette', $c);
     $mc->relations_one_to_many[] = $mc_hm_c;
 
-    $cs_hm_e = new Has_many($cs,
-                            'Equipes de joueurs praztiquant régulièrement ensemble',
-                            $e);
+    $cs_hm_e = new Has_many
+        ($cs,
+         'Equipes de joueurs pratiquant régulièrement ensemble',
+         $e);
     $cs->relations_one_to_many[] = $cs_hm_e;
 
     $s_hm_p = new Has_many($s, 'Parties ayant eu lieu sur ce terrain', $p);
