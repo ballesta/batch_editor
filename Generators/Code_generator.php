@@ -40,10 +40,16 @@
             $this->content = file_get_contents($this->file_path);
         }
 
-        function inject_source_code_end()
-        {
-            file_get_contents($this->file_path, $this->content);
-        }
+	    function inject_source_code_end()
+	    {
+		    file_get_contents($this->file_path, $this->content);
+	    }
+
+
+	    function get_name_from_id($id_or_name)
+	    {
+		    return $id_or_name;
+	    }
 
         abstract function modele_begin(Modele $modele);
 
