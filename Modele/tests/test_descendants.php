@@ -1,29 +1,34 @@
 <?php
-    /**
-     * Created by PhpStorm.
-     * User: bernard
-     * Date: 29/09/2016
-     * Time: 13:21
-     */
+	/**
+	 * Created by PhpStorm.
+	 * User: bernard
+	 * Date: 03/11/2016
+	 * Time: 11:47
+	 */
 
     include '../../Modele/Modele.php';
     include '../../Modele/Module.php';
     include '../../Modele/Has_many.php';
 
     include '../../Generators/Sximo_code_generator.php';
-    echo '<h1>Application de salles de football indoors</h1>';
+    echo '<h1>Test descendants module</h1>';
 
 	// 1-Crée le modèle de l'application
 	$modele = cree_modele_football();
 
-	// 2-Génère l'application
-    // Location of source code to enhance.
-    $local_laravel_site = 'H:\wamp-3-32\www\ms_football_salles\2-site';
-    $g = new Sixmo_code_generator($local_laravel_site);
-	//$modele->compile();
-	$modele->breadcrumb();
-    $modele->generate_code($g);
+	// 2-Teste l'application
 
+	$top_module = $modele->modules[0];
+
+	$descendants  = $top_module->breadcrumb_descendants($top_module);
+
+	//var_dump($descendants);
+	echo "<h2>Descendants du module '$top_module->nom' </h2>";
+	$i=1;
+	foreach ($descendants as $d)
+	{
+		echo $i++,': ',$d->nom, '<br>';
+	}
 
 	function cree_modele_football()
 	{
@@ -67,7 +72,7 @@
 			'Session de mesures avec un capteur');
 
 		$mesure = new Module('mesure', 'Mesures', 'mesure_id', '',
-			'Mesures de la partie');
+			                 'Mesures de la partie');
 
 		//-- Relations 'has many' --//
 
@@ -136,4 +141,3 @@
 
 		return $modele;
 	}
-?>

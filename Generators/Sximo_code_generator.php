@@ -146,13 +146,27 @@
             $file_path  = 'app\\Http\\Controllers'
 	                    . '\\' . $detail_module_name . 'Controller.php';
             $full_file_path = $this->laravel_project_path . '\\' . $file_path;
-            // Save path to wite generated file
-            //$this->full_file_path = $full_file_path;
             $this->editor->edit($full_file_path);
 
             // Do the changes
 
-            // 1. Get Key and label from URL then add it to Session
+	        // 1. Remove descendants when a top level changes
+	        // Example: Remove all id from session when "Reseau de salles" changes
+	        // By change we mean when the id is pushed in session
+
+	        $descendants  = $module->breadcrumb_descendants($module);
+	        $remove_ids = [];
+	        foreach ($descendants as $d)
+	        {
+		        $remove_ids [] = '\Session::forget("' . $d->id_key . '");';
+		        $remove_ids [] = '\Session::forget("' . $d->id_key . '_identifier' . '");';
+	        }
+	        $this->editor->find('function getIndex( Request $request )');
+	        $this->editor->find('{');
+	        $this->editor->insert($remove_ids);
+	        $this->editor->save();
+
+            // 2. Get Key and label from URL then add it to Session
             //        $club_id = $request->query("club_id");
             //        \Session::put("club_id", $club_id);
             $save_key =
@@ -163,14 +177,14 @@
                 'if (!is_null($id))',
 	            '{',
                 '    \Session::put("' . $module->id_key .'", $id);',
-	            '    \Session::put("' . $module->id_key . '_identifier", $identifier);' ,
+	            '    \Session::put("' . $module->id_key . '_identifier", $identifier);',
 	            '}',
 	            '$id = \Session::get("' . $module->id_key . '", null);',
 	            '$active_filter = \Session::get("'. $module->id_key . '_identifier");' ,
 	            '// Check if parent already selected',
 	            'if (is_null($id))',
 	            '{',
-		        'return Redirect::to("' . $module->nom . '")',
+		        '    return Redirect::to("' . $module->nom . '")',
 			    '    ->with("messagetext",',
 				'        "Vous devez d\'abord sélectionner votre <br> "',
 				'        ."<i>' . $module->title .'</i> <br>"',
@@ -180,6 +194,7 @@
 	            '}'
             ];
 
+	        $this->editor->move_to_beginning();
             $this->editor->find('function getIndex( Request $request )');
             $this->editor->find('{');
             $this->editor->insert($save_key);

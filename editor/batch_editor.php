@@ -177,9 +177,14 @@
 
         function insert_after($text)
         {
-            // Splice = 'épisure' in french
             $text_identified = $this->identifies_generated_block($text);
-            array_splice($this->lines, $this->current_pointer + 1, 0, $text_identified);
+	        // Splice = 'épisure' in french
+            array_splice($this->lines,              // Input and output apres épisure
+	                     $this->current_pointer + 1,// Offset where to cut ans splice
+	                     0,                         // Length suppressed part
+                                                    // No suppression in our case
+	                     $text_identified           // Text to add
+                        );
             $this->current_pointer += count($text);
         }
 
@@ -241,7 +246,8 @@
             }
             $this->backup_file();
             file_put_contents($this->file_to_edit, $this->lines);
-            $this->lines = [];
+            // Several changes possible after file is opened
+	        //$this->lines = []; // No! do not do it!
         }
 
         // Copy file to backup

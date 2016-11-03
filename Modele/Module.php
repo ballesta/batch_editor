@@ -38,13 +38,32 @@ class Module
 		{
 			echo "----1..1 $a->nom<br>";
 			$aa = $this->breadcrumb_ascendants($a);
-			echo '$aa';
-			var_dump($aa);
+			//echo '$aa';
+			//var_dump($aa);
 			$ascendants = array_merge($ascendants, [$a], $aa);
 		}
 		echo '$ascendants';
-		var_dump($ascendants);
+		//var_dump($ascendants);
 		return $ascendants;
 	}
+
+	function breadcrumb_descendants(Module $m)
+	{
+		//echo "<br>Breadcrum Modèle $m->nom<hr>";
+		$descendants = [];
+		//var_dump($this->relations_belongs_to_one);
+		foreach ($m->relations_one_to_many as $hm)
+		{
+			// Module descendant direct
+			$mdd= $hm->module_detail;
+			//echo "----1..* $mdd->nom<br>";
+			$descendants_1 = $this->breadcrumb_descendants($mdd);
+			//echo '$aa';
+			//var_dump($aa);
+			$descendants = array_merge($descendants, [$mdd], $descendants_1);
+		}
+		return $descendants;
+	}
+
 
 }
