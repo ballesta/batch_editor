@@ -31,43 +31,50 @@
 
 		//-- Modules --//
 
-		$rs = new Module('reseauxsalles', 'Réseau de salles', 'club_id', 'nom',
-			'Réseaux de complexes sportifs');
+		$rs = new Module('reseauxsalles', 'Réseau de salles',
+						 'fbs_reseaux_salles','club_id', 'nom',
+						 'Réseaux de complexes sportifs');
 
-		$cs = new Module('complexesportif', 'Centres sportifs', 'complexe_salle_id','nom',
-			'Locations de terrains de football indoors');
+		$cs = new Module('complexesportif', 'Centres sportifs',
+						 'fbs_complexe_salles', 'complexe_salle_id','nom',
+						 'Locations de terrains de football indoors');
 
-		$s =  new Module('salle'   , 'Terrains', 'salle_id', 'identifiant',
-			'Salles indoors');
+		$s =  new Module('salle'   , 'Terrains',
+						 'fbs_salles', 'salle_id', 'identifiant',
+						 'Terrains indoors');
 
-		$csj =  new Module('joueurCentre'   , 'Joueurs', 'joueur', 'nom',
-			'Joueurs du centre');
+		$csj =  new Module('joueurCentre'   , 'Joueurs',
+						   'fb_joueurs', 'joueur_id', 'nom',
+			               'Joueurs du centre');
 
 		//$mc = new Module('malette', 'Malette', 'malette_capteurs_id', 'identifiant',
 		//                 'Malette contenant 10 capteurs');
 
-		$c =  new Module('capteur' , 'Capteurs', 'capteurs_id', 'numero_serie',
-			'Capteur contenu dans une malette');
+		$c =  new Module('capteur' , 'Capteurs',
+						 'fb_capteurs','capteurs_id', 'numero_serie',
+						 'Capteur contenu dans une malette');
 
 		//$e =  new Module('equipe'  , 'Equipe', 'equipe_id', 'nom',
 		//                 'Equipes de joueurs');
 
-		$j =  new Module('joueur'  , 'Joueurs', 'joueur_id', 'nom',
-			'Joueurs en équipe ou individuels');
+		//$j =  new Module('joueur'  , 'Joueurs', 'joueur_id', 'nom',
+		//	'Joueurs en équipe ou individuels');
 
-		$p =  new Module('partie'  , 'Parties', 'partie_id', 'debut',
-			'Partie d\'une équipe dans une salle');
+		$p =  new Module('partie'  , 'Parties',
+						 'fb_partie', 'partie_id', 'debut',
+						 'Partie d\'une équipe dans une salle');
 
 		$js = new Module('joueurselectionne', 'Joueur sélectionné',
-			'joueur_selectionne_id', 'joueur_id',
-			'Joueurs sélectionnés pour la partie');
+						 'fb_joueurs_selectionnes', 'joueur_selectionne_id', 'joueur_id',
+						 'Joueurs sélectionnés pour la partie');
 
-		$sm = new Module('sessionmesure', 'Sessions mesures', 'session_mesure_id',
-			'date_heure',
-			'Session de mesures avec un capteur');
+		$sm = new Module('sessionmesure', 'Sessions mesures',
+						 'fb_sessions_mesures', 'session_mesure_id', 'date_heure',
+						 'Session de mesures avec un capteur');
 
-		$mesure = new Module('mesure', 'Mesures', 'mesure_id', '',
-			'Mesures de la partie');
+		$mesure = new Module('mesure', 'Mesures',
+							 'fb_mesures', 'mesure_id', '',
+							 'Mesures de la partie');
 
 		//-- Relations 'has many' --//
 
@@ -126,7 +133,7 @@
 		//$modele->modules[] = $mc;
 		$modele->modules[] = $c;
 		//$modele->modules[] = $e;
-		$modele->modules[] = $j;
+		//$modele->modules[] = $j;
 		$modele->modules[] = $s;
 		$modele->modules[] = $p;
 		$modele->modules[] = $js;

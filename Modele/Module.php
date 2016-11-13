@@ -16,12 +16,13 @@ class Module
     var $relations_one_to_many=[];
     var $relations_belongs_to_one=[];
 
-    function __construct($nom, $title, $id_key, $identifier, $explications)
+    function __construct($nom, $title, $table, $id_key, $identifier, $explications)
     {
         echo "Crée Module $nom ($explications)<br>";
         $this->nom          = $nom;
-        $this->title          = $title;
-        $this->id_key       = $id_key;
+        $this->title        = $title;
+	    $this->table        = $table;
+	    $this->id_key       = $id_key;
         $this->identifier   = $identifier;  // For Breadcrumb
         $this->explications = $explications;
 

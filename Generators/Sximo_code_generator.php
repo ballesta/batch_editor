@@ -24,7 +24,45 @@
         {
             echo '--Module begin ', $module->nom, '<br>';
 	        $this->insert_breadcrum($modele, $module);
+	        if ($module->nom == 'reseauxsalles')
+	        	$this->replace_function_queryWhere($module);
+        }
 
+        function replace_function_queryWhere(Module $module)
+        {
+	        // Get file to update
+	        $file_path = 'app\\Models' . '\\' . $module->nom . '.php';
+	        $full_file_path = $this->laravel_project_path . '\\' . $file_path;
+	        // Remove generated code previously generated code on first read
+	        $this->editor->edit($full_file_path);
+
+	        // Do the changes
+	        $function_begin = $this->editor->find('public static function queryWhere(  ){')  + 1;
+	        $function_next  = $this->editor->find('public static function queryGroup(){');
+	        $function_end = $function_next - 2;
+	        // Generate function to filter on current id
+	        $table = $module->table;
+	        $id_key = $module->id_key;
+
+	        $f = <<<END
+        public static function queryWhere(  ){
+	        \$role = \Session::get('gid');
+	        if (\$role == 1 ||  \$role == 2)
+	        {
+		        \$filter =  "  WHERE $table.$id_key IS NOT NULL ";
+	        }
+	        elseif (\$role == 4)
+	        {
+		        // Responsable reseau : limit to network
+		        \$$id_key = \Session::get('user_$id_key');
+		        \$filter =  "  WHERE $table.$id_key = \$$id_key ";
+	        }
+	        return \$filter;
+        }
+END;
+	        $this->editor->replace($function_begin, $function_end, [$f]);
+	        // Must save even if nothing changed
+            $this->editor->save();
         }
 
         function has_many_begin(Modele $modele, Module $module, Has_many $has_many)
