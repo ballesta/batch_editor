@@ -28,7 +28,7 @@
             // Remember project
             $this->laravel_project_path = $laravel_project_path;
             // Editor session for whole code generation session
-            $this->editor = new Batch_script_editor();
+            $this->editor = new Batch_script_editor($laravel_project_path);
         }
 
         // Add generated source code to a file

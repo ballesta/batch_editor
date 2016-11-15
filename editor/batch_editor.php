@@ -17,26 +17,28 @@
         var $generated_block_begin = '//(( Code generated begin';
         var $generated_block_end   = '//)) Code generated end';
 
-        function __construct()
+        function __construct($laravel_project_path)
         {
             // To keep track of cleaned files (suppress existing generated block)
             $this->file_already_cleaned=[];
+	        $this->laravel_project_path = $laravel_project_path;
         }
 
-        function edit($file_to_edit)
+        function edit($file_path)
         {
+	        $full_file_path = $this->laravel_project_path . '\\' . $file_path;
             // Remember file name
-            $this->file_to_edit = $file_to_edit;
+            $this->file_to_edit = $full_file_path;
             // Read file to edit in array
-            $this->lines = file($file_to_edit,
+            $this->lines = file($full_file_path,
                                 FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
             // First time seen only
             $this->remove_generated_code_blocks();
         }
 
         /**
-         * Remove generated code
-         * Used before to regenerate from Code_generator .
+         * Remove generated code upon first time encountered.
+         * Used before to regenerate from Code_generator.
          * Adds file to already_generated
          * File content already in core
          */
