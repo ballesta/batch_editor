@@ -24,45 +24,93 @@
         {
             echo '--Module begin ', $module->nom, '<br>';
 	        $this->insert_breadcrum($modele, $module);
+
 	        if ($module->nom == 'reseauxsalles')
-	            $this->replace_function_queryWhere($module);
+	        {
+		        $filter[] = $this->filter_by_reseau($module);
+		        echo "Filter: ";
+		        var_dump($filter);
+		        // Remember data filter on rows to insert in QueryWhere
+		        //$module->filter = $filter;
+		        $file_path = 'app\\Models' . '\\' . $module->nom . '.php';
+		        $this->editor->edit($file_path);
+
+		        // Read controller source code for injection of generated code
+		        $begin = $this->editor->find('public static function queryWhere(  ){');
+		        $end = $this->editor->find('}');
+		        // Replace function body by generated code
+		        $this->editor->replace($begin, $end, $filter);
+		        $this->editor->save();
+	        }
+	        elseif ($module->nom == 'complexesportif')
+		        $filter[] = $this->filter_by_complexe_sportif($module);
+		        echo "Filter: ";
+		        var_dump($filter);
+		        // Remember data filter on rows to insert in QueryWhere
+		        //$module->filter = $filter;
+		        $file_path = 'app\\Models' . '\\' . $module->nom . '.php';
+		        $this->editor->edit($file_path);
+
+		        // Read controller source code for injection of generated code
+		        $begin = $this->editor->find('public static function queryWhere(  ){');
+		        $end = $this->editor->find('}');
+		        // Replace function body by generated code
+		        $this->editor->replace($begin, $end, $filter);
+		        $this->editor->save();
         }
 
-        function replace_function_queryWhere(Module $module)
-        {
-	        // Get file to update
-	        $file_path = 'app\\Models' . '\\' . $module->nom . '.php';
-	        // Remove generated code previously generated code on first read
-	        $this->editor->edit($file_path);
 
-	        // Do the changes
-	        $function_begin = $this->editor->find('public static function queryWhere(  ){')  + 1;
-	        $function_next  = $this->editor->find('public static function queryGroup(){');
-	        $function_end = $function_next - 2;
-	        // Generate function to filter on current id
-	        $table = $module->table;
-	        $id_key = $module->id_key;
+	    function filter_by_reseau(Module $module)
+	    {
+		    // Generate function to filter on current id
+		    $table = $module->table;
 
-	        $f = <<<END
-        public static function queryWhere(  ){
-	        \$role = \Session::get('gid');
-	        if (\$role == 1 ||  \$role == 2)
-	        {
-		        \$filter =  "  WHERE $table.$id_key IS NOT NULL ";
-	        }
-	        elseif (\$role == 4)
-	        {
-		        // Responsable reseau : limit to network
-		        \$$id_key = \Session::get('user_$id_key');
-		        \$filter =  "  WHERE $table.$id_key = \$$id_key ";
-	        }
-	        return \$filter;
-        }
+		    $f = <<<END
+			//
+		\$role = \Session::get('gid');
+		if (\$role == 1 ||  \$role == 2)
+		{
+		    // Administrator: no filters by reseau
+		    \$where =  "";
+		}
+		elseif (\$role == 4  ||  \$role == 5)
+		{
+		    // Responsable reseau : limit to user network
+		    \$club_id = \Session::get('user_club_id');
+		    \$where =  "  WHERE $table.club_id = \$club_id ";
+		}		    
+		return \$where;
+
 END;
-	        $this->editor->replace($function_begin, $function_end, [$f]);
-	        // Must save even if nothing changed
-            $this->editor->save();
-        }
+		    return $f;
+	    }
+
+	    function filter_by_complexe_sportif(Module $module)
+	    {
+		    // Generate function to filter on current id
+		    $table = $module->table;
+
+		    $f = <<<END
+	        \$role = \Session::get('gid');
+	        if (   \$role == 1  
+	            || \$role == 2
+	            || \$role == 4	            
+	            )
+	        {
+	            // Administrators, reseponsable reseau: no filters by reseau
+		        \$where =  "";
+	        }
+	        elseif (\$role == 5)
+	        {
+		        // Responsable complexe sportif : complexe sportif
+		        \$id = \Session::get('user_complexe_salle_id');
+		        \$where .=  "  WHERE $table.complexe_salle_id = \$id ";
+	        }
+			return \$where;
+END;
+		    return $f;
+	    }
+
 
         function has_many_begin(Modele $modele, Module $module, Has_many $has_many)
         {
@@ -276,7 +324,7 @@ END;
         function belongs_to_begin(Modele $modele, Module $module, Module $parent)
         {
             echo '----belongs_to_begin ', $module->nom, ' belongs to ', $parent->nom, '<br>';
-            $this->insert_parent_filter_in_model($module, $parent);
+            $this->insert_parent_filter_in_module($module, $parent);
         }
 
         /**
@@ -286,10 +334,14 @@ END;
          * Called for every module 'belongs to one' parent relation
          * Changes done at module level, not in parent
          *
+         * Adds also the filter on Reseaux and Clubsportif
+         * depending on the user role.
+         *
+         *
          * @param \Module $module Generate parent filter
          * @param \Module $parent Parent to get parent_id to filter on
          */
-        function insert_parent_filter_in_model(Module $module, Module $parent)
+        function insert_parent_filter_in_module(Module $module, Module $parent)
         {
             // Replace SQL where clause in model
             $parent_id_key = $parent->id_key;
@@ -311,10 +363,10 @@ END;
                 '{',
                 '    // Filter by parent id',
                 '    $where = "  WHERE $table.$parent_id_key = $id ";',
-                '}',
-                'return $where; '
+                '}'
             ];
 
+	        $filter[] =  'return $where; ';
 	        
             $file_path = 'app\\Models' . '\\' . $module->nom . '.php';
             $this->editor->edit($file_path);
@@ -322,11 +374,11 @@ END;
             // Read controller source code for injection of generated code
             $begin = $this->editor->find('public static function queryWhere(  ){');
             $end = $this->editor->find('}');
-            echo "$begin $end<hr>";
             // Replace function body by generated code
             $this->editor->replace($begin, $end, $filter);
             $this->editor->save();
         }
+
 
         function belongs_to_end(Modele $modele, Module $module, Module $parent)
         {
