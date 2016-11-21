@@ -16,6 +16,8 @@ class Module
     var $relations_one_to_many=[];
     var $relations_belongs_to_one=[];
 
+	var $queryWhere;
+
     function __construct($nom, $title, $table, $id_key, $identifier, $explications)
     {
         echo "Crée Module $nom ($explications)<br>";
@@ -28,6 +30,8 @@ class Module
 
 	    $this->relations_one_to_many   =[];
 	    $this->relations_belongs_to_one=[];
+
+	    $this->queryWhere = [];
     }
 
 	function breadcrumb_ascendants(Module $m)
