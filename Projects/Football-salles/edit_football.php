@@ -76,6 +76,11 @@
 							 'fb_mesures', 'mesure_id', '',
 							 'Mesures de la partie');
 
+		$inscription = new Module('inscription', 'Inscriptions',
+			' fbs_inscription', 'inscription_id', '',
+			'Inscription et remise des capteurs par l\'accueil');
+
+
 		//-- Relations 'has many' --//
 
 		$rs_has_many_cs = new Has_many($rs, 'Complexes sportifs gérés par ce réseau', $cs);
@@ -92,6 +97,10 @@
 
 		$cs_has_many_c = new Has_many($cs, 'Capteurs du centre sportif', $c);
 		$cs->relations_one_to_many[] = $cs_has_many_c;
+
+		$cs_has_many_inscription = new Has_many($cs, 'Inscription et remise capteurs', $inscription);
+		$cs->relations_one_to_many[] = $cs_has_many_inscription;
+
 		//$mc_has_many_c = new Has_many($mc, 'Capteurs contenus dans la malette', $c);
 		//$mc->relations_one_to_many[] = $mc_has_many_c;
 
