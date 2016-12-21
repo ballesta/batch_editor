@@ -65,11 +65,15 @@
 						 'Partie d\'une équipe dans une salle');
 
 		$js = new Module('joueurselectionne', 'Joueur sélectionné',
-						 'fb_joueurs_selectionnes', 'joueur_selectionne_id', 'joueur_id',
+						 'fb_joueurs_selectionnes',
+						 'joueur_selectionne_id',
+						 'joueur_id',
 						 'Joueurs sélectionnés pour la partie');
 
 		$sm = new Module('sessionmesure', 'Sessions mesures',
-						 'fb_sessions_mesures', 'session_mesure_id', 'date_heure',
+						 'fb_sessions_mesures',
+					     'session_mesure_id',
+						 'heure_debut',
 						 'Session de mesures avec un capteur');
 
 		$mesure = new Module('mesure', 'Mesures',

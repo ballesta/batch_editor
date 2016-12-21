@@ -36,7 +36,8 @@ class Module
 
 	function breadcrumb_ascendants(Module $m)
 	{
-		//echo "<br>Breadcrum Modèle $m->nom<hr>";
+		if ($m->nom == 'sessionmesure')
+		    echo "<br>Breadcrum Modèle $m->nom<hr>";
 		$ascendants = [];
 		//var_dump($this->relations_belongs_to_one);
 		foreach ($m->relations_belongs_to_one as $a)
@@ -47,8 +48,11 @@ class Module
 			//var_dump($aa);
 			$ascendants = array_merge($ascendants, [$a], $aa);
 		}
-		echo '$ascendants';
-		//var_dump($ascendants);
+		if ($m->nom == 'sessionmesure')
+		{
+			echo '<h3>Ascendants</h3>';
+			var_dump($ascendants);
+		}
 		return $ascendants;
 	}
 
