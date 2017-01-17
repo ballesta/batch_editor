@@ -8,17 +8,46 @@
  */
 class Module
 {
-    var $nom;
-    var $title;
-    var $id_key;
-    var $explications;
-
-    var $relations_one_to_many=[];
-    var $relations_belongs_to_one=[];
-
+	/**
+	 * @var
+	 */
+	var $nom;
+	/**
+	 * @var
+	 */
+	var $title;
+	/**
+	 * @var
+	 */
+	var $id_key;
+	/**
+	 * @var
+	 */
+	var $explications;
+	/**
+	 * @var array
+	 */
+	var $relations_one_to_many=[];
+	/**
+	 * @var array
+	 */
+	var $relations_belongs_to_one=[];
+	/**
+	 * @var array
+	 */
 	var $queryWhere;
 
-    function __construct($nom, $title, $table, $id_key, $identifier, $explications)
+	/**
+	 * Module constructor.
+	 *
+	 * @param $nom
+	 * @param $title
+	 * @param $table
+	 * @param $id_key
+	 * @param $identifier
+	 * @param $explications
+	 */
+	function __construct($nom, $title, $table, $id_key, $identifier, $explications)
     {
         echo "Crée Module $nom ($explications)<br>";
         $this->nom          = $nom;
@@ -34,6 +63,11 @@ class Module
 	    $this->queryWhere = [];
     }
 
+	/**
+	 * @param \Module $m
+	 *
+	 * @return array
+	 */
 	function breadcrumb_ascendants(Module $m)
 	{
 		if ($m->nom == 'sessionmesure')
@@ -56,6 +90,11 @@ class Module
 		return $ascendants;
 	}
 
+	/**
+	 * @param \Module $m
+	 *
+	 * @return array Module m descendants
+	 */
 	function breadcrumb_descendants(Module $m)
 	{
 		//echo "<br>Breadcrum Modèle $m->nom<hr>";

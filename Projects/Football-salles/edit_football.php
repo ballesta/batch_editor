@@ -39,6 +39,10 @@
 						 'fbs_complexe_salles', 'complexe_salle_id','nom',
 						 'Locations de terrains de football indoors');
 
+		$aj = new Module('accueiljoueurs', 'Accueil Joueurs',
+			'fbs_inscription', 'inscription_id', '',
+			'Inscription match et remise des capteurs par l\'accueil');
+
 		$s =  new Module('salle'   , 'Terrains',
 						 'fbs_salles', 'salle_id', 'identifiant',
 						 'Terrains indoors');
@@ -93,6 +97,8 @@
 		//$cs_has_many_mc = new Has_many($cs, 'Malettes du complexe sportif', $mc);
 		//$cs->relations_one_to_many[] = $cs_has_many_mc;
 
+
+
 		$cs_has_many_s = new Has_many($cs, 'Terrains du complexe sportif', $s);
 		$cs->relations_one_to_many[] = $cs_has_many_s;
 
@@ -102,8 +108,11 @@
 		$cs_has_many_c = new Has_many($cs, 'Capteurs du centre sportif', $c);
 		$cs->relations_one_to_many[] = $cs_has_many_c;
 
-		$cs_has_many_inscription = new Has_many($cs, 'Inscription et remise capteurs', $inscription);
-		$cs->relations_one_to_many[] = $cs_has_many_inscription;
+		$cs_has_many_aj = new Has_many($cs, 'Accueil joueurs', $aj);
+		$cs->relations_one_to_many[] = $cs_has_many_aj;
+
+		//$cs_has_many_inscription = new Has_many($cs, 'Inscription et remise capteurs', $inscription);
+		//$cs->relations_one_to_many[] = $cs_has_many_inscription;
 
 		//$mc_has_many_c = new Has_many($mc, 'Capteurs contenus dans la malette', $c);
 		//$mc->relations_one_to_many[] = $mc_has_many_c;
