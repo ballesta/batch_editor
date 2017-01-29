@@ -58,8 +58,9 @@
 						 'fb_capteurs','capteurs_id', 'numero_serie',
 						 'Capteur contenu dans une malette');
 
-		//$e =  new Module('equipe'  , 'Equipe', 'equipe_id', 'nom',
-		//                 'Equipes de joueurs');
+		$e =  new Module('equipe'  , 'Equipe',
+			             'fb_equipe','equipe_id', 'nom',
+		                 'Equipes de joueurs');
 
 		//$j =  new Module('joueur'  , 'Joueurs', 'joueur_id', 'nom',
 		//	'Joueurs en équipe ou individuels');
@@ -85,8 +86,8 @@
 							 'Mesures de la partie');
 
 		$inscription = new Module('inscription', 'Inscriptions',
-			' fbs_inscription', 'inscription_id', '',
-			'Inscription et remise des capteurs par l\'accueil');
+								  'fbs_inscription', 'inscription_id', '',
+			                      'Inscription et remise des capteurs par l\'accueil');
 
 
 		//-- Relations 'has many' --//
@@ -108,23 +109,33 @@
 		$cs_has_many_c = new Has_many($cs, 'Capteurs du centre sportif', $c);
 		$cs->relations_one_to_many[] = $cs_has_many_c;
 
-		$cs_has_many_aj = new Has_many($cs, 'Accueil joueurs', $aj);
-		$cs->relations_one_to_many[] = $cs_has_many_aj;
+		//$cs_has_many_aj = new Has_many($cs, 'Accueil joueurs', $aj);
+		//$cs->relations_one_to_many[] = $cs_has_many_aj;
 
 		//$cs_has_many_inscription = new Has_many($cs, 'Inscription et remise capteurs', $inscription);
 		//$cs->relations_one_to_many[] = $cs_has_many_inscription;
 
 		//$mc_has_many_c = new Has_many($mc, 'Capteurs contenus dans la malette', $c);
 		//$mc->relations_one_to_many[] = $mc_has_many_c;
+        $cs_has_many_e = new Has_many
+		      ($cs,
+		       'Equipes de joueurs pratiquant régulièrement ensemble',
+		       $e);
+		  $cs->relations_one_to_many[] = $cs_has_many_e;
 
-		//    $cs_has_many_e = new Has_many
-		//        ($cs,
-		//         'Equipes de joueurs pratiquant régulièrement ensemble',
-		//         $e);
-		//    $cs->relations_one_to_many[] = $cs_has_many_e;
-
-		$s_has_many_p = new Has_many($s, 'Parties ayant eu lieu sur ce terrain', $p);
+		$s_has_many_p = new Has_many($s,
+			                         'Parties ayant eu lieu sur ce terrain',
+			                         $p);
 		$s->relations_one_to_many[] = $s_has_many_p;
+
+		// Une partie a plusieurs joueurs inscrits avec affectation capteur
+		//
+		$p_has_many_i = new Has_many(
+			$p,
+			'Parties avec plusieurs inscription de joueurs avec capteur',
+			$inscription);
+		$p->relations_one_to_many[] = $p_has_many_i;
+
 		// ++++ Deux chemins pour atteindre les joueurs
 		// ++++ Faut se rappeler par ou on arrive et utiliser le bon filtre
 		// ++++ Enlever le filtre précédent à l'arrivée
@@ -135,6 +146,7 @@
 		//$e_has_many_j = new Has_many($e, 'Joueurs membres de l\'equipe (jouent fréquement ensembles)', $j);
 		//$e->relations_one_to_many[] = $e_has_many_j;
 
+		/*
 		$p_has_many_js = new Has_many($p, 'Joueurs Sélectionnés pour la partie', $js);
 		$p->relations_one_to_many[] = $p_has_many_js;
 
@@ -147,6 +159,8 @@
 
 		$sm_has_many_m = new Has_many($sm, 'Mesures enregistrées au cours de la session', $mesure);
 		$sm->relations_one_to_many[] = $sm_has_many_m;
+		*/
+
 
 		// Ajoute modules au modèle
 		$modele->modules[] = $rs;
@@ -154,10 +168,11 @@
 		$modele->modules[] = $csj;
 		//$modele->modules[] = $mc;
 		$modele->modules[] = $c;
-		//$modele->modules[] = $e;
+		$modele->modules[] = $e;
 		//$modele->modules[] = $j;
 		$modele->modules[] = $s;
 		$modele->modules[] = $p;
+		$modele->modules[] = $inscription;
 		$modele->modules[] = $js;
 		$modele->modules[] = $sm;
 		$modele->modules[] = $mesure;

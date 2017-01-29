@@ -138,11 +138,15 @@
 			$this->editor->save();
 		}
 
-		function insert_init_parent_key_into_controller($modele, $module, $has_many)
+		function insert_init_parent_key_into_controller
+			($modele,
+			 $module,
+			 $has_many)
 		{
 			// Get file to update
 			$detail_module_name = $has_many->module_detail->nom;
-			$file_path = 'app\\Http\\Controllers' . '\\' . $detail_module_name . 'Controller.php';
+			$file_path = 'app\\Http\\Controllers'
+				       . '\\' . $detail_module_name . 'Controller.php';
 			// Save path to wite generated file
 			//$this->full_file_path = $full_file_path;
 			$this->editor->edit($file_path);
@@ -166,7 +170,8 @@
 
 		function belongs_to_begin(Modele $modele, Module $module, Module $parent)
 		{
-			echo '----belongs_to_begin ', $module->nom, ' belongs to ', $parent->nom, '<br>';
+			echo '----belongs_to_begin ', $module->nom,
+			     '<br>---- ----', ' belongs to ', $parent->nom, '<br>';
 			$this->insert_parent_filter_in_module($module, $parent);
 		}
 
@@ -178,7 +183,7 @@
 		 * Changes done at module level, not in parent
 		 *
 		 * Adds also the filter on Reseaux and Clubsportif
-		 * depending on the user role.
+		 * depending on the user role. //todo check
 		 *
 		 *
 		 * @param \Module $module Generate parent filter
