@@ -69,11 +69,11 @@
 						 'fb_partie', 'partie_id', 'debut',
 						 'Partie d\'une équipe dans une salle');
 
-		$js = new Module('joueurselectionne', 'Joueur sélectionné',
+/*		$js = new Module('joueurselectionne', 'Joueur sélectionné',
 						 'fb_joueurs_selectionnes',
 						 'joueur_selectionne_id',
 						 'joueur_id',
-						 'Joueurs sélectionnés pour la partie');
+						 'Joueurs sélectionnés pour la partie');*/
 
 		$sm = new Module('sessionmesure', 'Sessions mesures',
 						 'fb_sessions_mesures',
