@@ -82,8 +82,8 @@ END;
 
         function has_many_begin(Modele $modele, Module $module, Has_many $has_many)
         {
-            echo '----has_many_begin ---- ',
-                 $module->nom, ' hasmany ',
+            echo '----has_many_begin ----<br> ',
+                 '---- ---- ', $module->nom, ' hasmany ',
 	             $has_many->module_detail->nom . '<br>';
             $this->insert_link_to_detail_grid($modele, $module, $has_many);
             $this->insert_remember_filter_key_into_controller($modele, $module, $has_many);
@@ -94,7 +94,7 @@ END;
 	    function insert_breadcrum(Modele $modele, Module $module)
 	    {
 		    // Get file to update
-		    $file_path = 'resources\\views' . '\\' . $module->nom . '\\index.blade.php';
+		    $file_path = 'resources/views' . '/' . $module->nom . '/index.blade.php';
 		    // Remove generated code previously generated code on first read
 		    $this->editor->edit($file_path);
 
@@ -141,7 +141,7 @@ END;
         function insert_link_to_detail_grid(Modele $modele, Module $module, Has_many $has_many)
         {
             // Get file to update
-            $file_path = 'resources\\views' . '\\' . $module->nom . '\\index.blade.php';
+            $file_path = 'resources/views' . '/' . $module->nom . '/index.blade.php';
             // Save path to wite generated file
             //$this->full_file_path = $full_file_path;
             $this->editor->edit($file_path);
@@ -194,8 +194,9 @@ END;
             // Get file to update
             $detail_module_name = $has_many->module_detail->nom;
 	        $detail_module_name_title = $has_many->module_detail->title;
-            $file_path  = 'app\\Http\\Controllers'
-	                    . '\\' . $detail_module_name . 'Controller.php';
+            $file_path  = 'app/Http/Controllers'
+	                    . '/'
+                        . ucfirst($detail_module_name) . 'Controller.php';
             $this->editor->edit($file_path);
 
             // Do the changes
@@ -255,9 +256,9 @@ END;
         {
             // Get file to update
             $detail_module_name = $has_many->module_detail->nom;
-            $file_path  = 'app\\Http\\Controllers'
-	                    . '\\'
-	                    . $detail_module_name
+            $file_path  = 'app/Http/Controllers'
+	                    . '/'
+	                    . ucfirst($detail_module_name)
 	                    . 'Controller.php';
             // Save path to wite generated file
             //$this->full_file_path = $full_file_path;
@@ -336,7 +337,7 @@ END;
             ];
 
 	        $module->queryWhere[] = $this->array_to_string($filter);
-	        var_dump($module->queryWhere);
+	        //var_dump($module->queryWhere);
         }
 
         // Convert array of strings to e signle string
@@ -366,7 +367,7 @@ END;
 
         function substitute_queryWhere_in_model(Modele $modele, Module $module)
         {
-	        $file_path = 'app\\Models' . '\\' . $module->nom . '.php';
+	        $file_path = 'app/Models' . '/' . ucfirst($module->nom) . '.php';
 	        $this->editor->edit($file_path);
 
 	        // Read model source code for injection of generated code
@@ -384,7 +385,7 @@ END;
 			return \$queryWhere;
 END;
 	        // Replace function body by generated code
-	        var_dump($gen_queryWhere);
+	        //var_dump($gen_queryWhere);
 	        $this->editor->replace($begin, $end, [$gen_queryWhere]);
 	        $this->editor->save();
         }

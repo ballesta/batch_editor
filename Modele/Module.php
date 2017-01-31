@@ -47,7 +47,7 @@ class Module
 			//var_dump($aa);
 			$ascendants = array_merge($ascendants, [$a], $aa);
 		}
-		echo '$ascendants';
+		//echo '$ascendants';
 		//var_dump($ascendants);
 		return $ascendants;
 	}
