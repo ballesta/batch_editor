@@ -26,7 +26,7 @@
 
         function edit($file_path)
         {
-	        $full_file_path = $this->laravel_project_path . '\\' . $file_path;
+	        $full_file_path = $this->laravel_project_path . '/' . $file_path;
             // Remember file name
             $this->file_to_edit = $full_file_path;
             // Read file to edit in array

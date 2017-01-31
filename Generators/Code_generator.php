@@ -35,7 +35,7 @@
         function inject_source_code_begin($file_path_in_project)
         {
             $this->file_path = $this->laravel_project_path
-                             . '\\'
+                             . '/'
                              . $file_path_in_project;
             $this->content = file_get_contents($this->file_path);
         }

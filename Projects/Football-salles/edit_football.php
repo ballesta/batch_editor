@@ -18,7 +18,8 @@
 
 	// 2-Génère l'application
     // Location of source code to enhance.
-    $local_laravel_site = 'H:\wamp-3-32\www\ms_football_salles\2-site';
+    $project_location = '/var/www/html/';
+    $local_laravel_site = $project_location .'ubuntu_football_salles/2-site';
     $g = new Sixmo_code_generator($local_laravel_site);
 	//$modele->compile();
 	$modele->breadcrumb();

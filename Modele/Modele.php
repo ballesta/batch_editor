@@ -74,11 +74,11 @@ class Modele
     function generate_code(Code_generator $g)
     {
         $g->modele_begin($this);
-        //echo "<br>Modèle $this->nom<hr>";
+        echo "<br>Modèle $this->nom<hr>";
         foreach ($this->modules as $m)
         {
             $g->module_begin($this,$m);
-            //echo "--Module $m->nom<br>";
+            echo "--Module $m->nom<br>";
             foreach ($m->relations_one_to_many as $r)
             {
                 $g->has_many_begin($this,$m,$r);

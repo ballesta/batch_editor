@@ -8,33 +8,14 @@
  */
 class Module
 {
-	/**
-	 * @var
-	 */
-	var $nom;
-	/**
-	 * @var
-	 */
-	var $title;
-	/**
-	 * @var
-	 */
-	var $id_key;
-	/**
-	 * @var
-	 */
-	var $explications;
-	/**
-	 * @var array
-	 */
-	var $relations_one_to_many=[];
-	/**
-	 * @var array
-	 */
-	var $relations_belongs_to_one=[];
-	/**
-	 * @var array
-	 */
+    var $nom;
+    var $title;
+    var $id_key;
+    var $explications;
+
+    var $relations_one_to_many=[];
+    var $relations_belongs_to_one=[];
+
 	var $queryWhere;
 
 	/**
