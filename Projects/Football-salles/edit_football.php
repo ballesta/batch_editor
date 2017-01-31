@@ -62,7 +62,7 @@
 			             'fb_equipe','equipe_id', 'nom',
 		                 'Equipes de joueurs');
 
-/*	 	$j =  new Module('joueur'   , 'Joueurs', 'joueur_id', 'nom',
+/*	 	$j =  new Module('joueur'    , 'Joueurs', 'joueur_id', 'nom',
 			'Joueurs en équipe ou individuels');*/
 
 		$p =  new Module('partie'  , 'Parties',
