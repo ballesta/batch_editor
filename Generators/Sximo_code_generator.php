@@ -69,10 +69,13 @@
 
 		function has_many_begin(Modele $modele, Module $module, Has_many $has_many)
 		{
-			echo '----has_many_begin ---- ', $module->nom, ' hasmany ', $has_many->module_detail->nom . '<br>';
+			echo '----has_many_begin:  ', $module->nom, ' hasmany ', $has_many->module_detail->nom . '<br>';
+			echo "insert_link_to_detail_grid<br>";
 			$this->insert_link_to_detail_grid($modele, $module, $has_many);
+			echo "insert_remember_filter_key_into_controller(<br>";
 			$this->insert_remember_filter_key_into_controller($modele, $module, $has_many);
-			$this->insert_init_parent_key_into_controller($modele, $module, $has_many);
+			echo "insert_remember_filter_key_into_controller(<br>";
+			$this->insert_remember_filter_key_into_controller($modele, $module, $has_many);
 		}
 
 		// Insert button in list to drill down to detailed list
@@ -81,6 +84,7 @@
 		{
 			// Get file to update
 			$file_path = 'resources\\views' . '\\' . $module->nom . '\\index.blade.php';
+
 			// Save path to wite generated file
 			//$this->full_file_path = $full_file_path;
 			$this->editor->edit($file_path);
@@ -90,16 +94,27 @@
 			// Find line containing pattern
 			$this->editor->find("{{ Lang::get('core.btn_action') }}");
 			// Replace in current line
-			$this->editor->replace_regexp('#<th width=.+><span>(.+)</span></th>#', '<th width="40%"><span>${1}</span></th>');
+			$this->editor->replace_regexp('#<th width=.+>(.+)</th>#',
+				'<th width="40%">${1}</th>');
 			// 2. Insert link to detail view of current line
 			//    ------------------------------------------
 			$module_name = $has_many->module_detail->nom;
 			$module_title = $has_many->module_detail->title;
 			// Prepare button link to details
-			$link_to_detail = ['{!!', '\Navigation::link_to_detail(  ', '$text        = ' . "'$module_title',", '$help        = ' . "'$has_many->explications',", '$url         = ' . "URL::to('$module_name'),", '$parent_key  = ' . "'$module->id_key',", '$parent_label= ' . "'$module->identifier',", '$parent_id   = ' . '$row->' . $module->id_key . ",", '$parent_name = ' . '$row->' . $module->identifier, ')', '!!}'];
+			$link_to_detail =
+				['{!!',
+					'\Navigation::link_to_detail(  ',
+					'$text        = ' . "'$module_title',",
+					'$help        = ' . "'$has_many->explications',",
+					'$url         = ' . "URL::to('$module_name'),",
+					'$parent_key  = ' . "'$module->id_key',",
+					'$parent_label= ' . "'$module->identifier',",
+					'$parent_id   = ' . '$row->' . $module->id_key . ",",
+					'$parent_name = ' . '$row->' . $module->identifier, ')',
+					'!!}'];
 			$this->editor->find('@foreach ($tableGrid as $field)');
 			$this->editor->find('@endforeach');
-			$this->editor->find('<td>');
+			$this->editor->find('<td');
 			$this->editor->insert($link_to_detail);
 			$this->editor->save();
 		}
@@ -123,7 +138,7 @@
 				$remove_ids [] = '\Session::forget("' . $d->id_key . '");';
 				$remove_ids [] = '\Session::forget("' . $d->id_key . '_identifier' . '");';
 			}
-			$this->editor->find('function getIndex( Request $request )');
+			$this->editor->find('function getIndex(');
 			$this->editor->find('{');
 			$this->editor->insert($remove_ids);
 			$this->editor->save();
@@ -132,29 +147,29 @@
 			//        \Session::put("club_id", $club_id);
 			$save_key = ['// Get parameter in URL to use it as filter', '$id' . ' = ' . '$request->query("' . $module->id_key . '");', '$identifier' . ' = ' . '$request->query("' . $module->identifier . '");', 'if (!is_null($id))', '{', '    \Session::put("' . $module->id_key . '", $id);', '    \Session::put("' . $module->id_key . '_identifier", $identifier);', '}', '$id = \Session::get("' . $module->id_key . '", null);', '$active_filter = \Session::get("' . $module->id_key . '_identifier");', '// Check if parent already selected', 'if (is_null($id))', '{', '    return Redirect::to("' . $module->nom . '")', '    ->with("messagetext",', '        "Vous devez d\'abord sélectionner votre <br> "', '        ."<i>' . $module->title . '</i> <br>"', '        ."avant de choisir <br>"', '        ."<i>' . $detail_module_name_title . '</i>")', '    ->with("msgstatus","warning");', '}'];
 			$this->editor->move_to_beginning();
-			$this->editor->find('function getIndex( Request $request )');
+			$this->editor->find('function getIndex(');
 			$this->editor->find('{');
 			$this->editor->insert($save_key);
 			$this->editor->save();
 		}
 
 		function insert_init_parent_key_into_controller
-			($modele,
-			 $module,
-			 $has_many)
+		($modele,
+			$module,
+			$has_many)
 		{
 			// Get file to update
 			$detail_module_name = $has_many->module_detail->nom;
 			$file_path = 'app\\Http\\Controllers'
-				       . '\\' . $detail_module_name . 'Controller.php';
+				. '\\' . $detail_module_name . 'Controller.php';
 			// Save path to wite generated file
 			//$this->full_file_path = $full_file_path;
 			$this->editor->edit($file_path);
 			// Do the changes
-			$init_key = 
+			$init_key =
 				[   '$columns = $this->data[\'row\'];',
 					'$id' . ' = \Session::get(\'' . $module->id_key . '\', null);',
-					'$columns[\'' . $module->id_key . '\']' . ' = ' . '$id;', 
+					'$columns[\'' . $module->id_key . '\']' . ' = ' . '$id;',
 					'$this->data[\'row\'] = $columns;'
 				];
 			$this->editor->find('function getUpdate(Request $request, $id = null)');
@@ -171,7 +186,7 @@
 		function belongs_to_begin(Modele $modele, Module $module, Module $parent)
 		{
 			echo '----belongs_to_begin ', $module->nom,
-			     '<br>---- ----', ' belongs to ', $parent->nom, '<br>';
+			'<br>---- ----', ' belongs to ', $parent->nom, '<br>';
 			$this->insert_parent_filter_in_module($module, $parent);
 		}
 
@@ -195,23 +210,23 @@
 			$parent_id_key = $parent->id_key;
 			$filter =
 				[    '// Filter on parent ',
-					 '$parent_id_key = ' . "'$parent_id_key';",
-					 '// Table',
-					 '$table = with(new static)->table;',
-					 '// clef primaire de la table',
-					 '$key = with(new static)->primaryKey;',
-					 '// Id du parent passée en paramètre?',
-					 '$id = \Session::get($parent_id_key,null);',
-					 'if (is_null($id))',
-					 '{',
-					 '    // No id,leave existing filter',
-					 '    $where[] = " $table.$key IS NOT NULL ";',
-					 '}',
-					 'else',
-					 '{',
-					 '    // Filter by parent id',
-					 '    $where[] = "  $table.$parent_id_key = $id ";',
-					 '}'
+					'$parent_id_key = ' . "'$parent_id_key';",
+					'// Table',
+					'$table = with(new static)->table;',
+					'// clef primaire de la table',
+					'$key = with(new static)->primaryKey;',
+					'// Id du parent passée en paramètre?',
+					'$id = \Session::get($parent_id_key,null);',
+					'if (is_null($id))',
+					'{',
+					'    // No id,leave existing filter',
+					'    $where[] = " $table.$key IS NOT NULL ";',
+					'}',
+					'else',
+					'{',
+					'    // Filter by parent id',
+					'    $where[] = "  $table.$parent_id_key = $id ";',
+					'}'
 				];
 			$module->queryWhere[] = $this->array_to_string($filter);
 			//var_dump($module->queryWhere);
@@ -244,11 +259,12 @@
 
 			// Generate code to compose  WHERE clause
 			$queryWhere = '$where = [];';
-	        foreach ($module->queryWhere as $c)
-	        {
-		        $queryWhere .=  $c ;
-	        }
-			$queryWhere .= '$where[] = \App\Helpers\Roles::filter( "' . $module->nom . '");' . "\n";
+			foreach ($module->queryWhere as $c)
+			{
+				$queryWhere .=  $c ;
+			}
+			$nom_module = $module->nom;
+			$queryWhere .= '$where[] = \App\Helpers\Roles::filter( "' . $nom_module . '");' . "\n";
 			$queryWhere .= '$sql_where = \App\Helpers\SQL_Where::compose($where);' . "\n";
 			$queryWhere .= 'return $sql_where;';
 
