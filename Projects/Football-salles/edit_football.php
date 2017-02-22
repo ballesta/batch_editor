@@ -110,14 +110,6 @@
 		$cs_has_many_c = new Has_many($cs, 'Capteurs du centre sportif', $c);
 		$cs->relations_one_to_many[] = $cs_has_many_c;
 
-		//$cs_has_many_aj = new Has_many($cs, 'Accueil joueurs', $aj);
-		//$cs->relations_one_to_many[] = $cs_has_many_aj;
-
-		//$cs_has_many_inscription = new Has_many($cs, 'Inscription et remise capteurs', $inscription);
-		//$cs->relations_one_to_many[] = $cs_has_many_inscription;
-
-		//$mc_has_many_c = new Has_many($mc, 'Capteurs contenus dans la malette', $c);
-		//$mc->relations_one_to_many[] = $mc_has_many_c;
         $cs_has_many_e = new Has_many
 		      ($cs,
 		       'Equipes de joueurs pratiquant régulièrement ensemble',
